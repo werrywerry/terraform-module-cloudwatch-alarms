@@ -1,13 +1,46 @@
 variable "name" {
   type        = string
   description = "The service name."
+  default     = "TerraformDashboardDemo"
+}
+
+variable "resource_list" {
+  description = "List of AWS resources and their required alarm ARNs"
+  type = object({
+    apis = list(object({
+      api    = string
+    }))
+    dynamos = list(object({
+      dynamo = string
+    }))
+    lambdas = list(object({
+      lambda = string
+    }))
+    rdss = list(object({
+      rds    = string
+    }))
+  })
+  default = {
+    "lambdas" : [
+      { "lambda" : "staff-personal-change-event-processor-lambda" },
+    ],
+    "rdss" : [
+      { "rds" : "staff-service-datastore" }
+    ],
+    "apis" : [
+      { "api" : "staff-service-v3" }
+    ],
+    "dynamos" : [
+      { "dynamo" : "CapabilityDemo-AwsXray" }
+    ]
+  }
 }
 
 variable "lambda_function_name" {
   type        = string
   description = "The lambda function name for use with CloudWatch Metrics."
+  default = "staff-personal-change-event-processor-lambda"
 }
-
 
 variable "enable_metric_alarm" {
   type        = bool
