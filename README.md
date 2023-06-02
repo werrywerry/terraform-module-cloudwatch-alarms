@@ -5,6 +5,7 @@ This module helps set up all necessary CloudWatch Alarms for the AWS resources p
 ## Usage
 
 To use this module, you need to provide a list of AWS resources that you want to monitor. Here's an example:
+(Please note, this is just an example. Resources provided should belong to the same service/system/adapter)
 
 ```hcl
 module "cloudwatch_alarms" {
