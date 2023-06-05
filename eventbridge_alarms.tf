@@ -16,7 +16,7 @@ resource "aws_cloudwatch_metric_alarm" "eventbridge_dead_letter_alarm" {
 
   alarm_description = format( "This alarm is triggered when there is at least 1 DeadLetterInvocation in EventBridge %s", each.value.name) 
 
-  alarm_actions = []
+  alarm_actions = [local.sns_topic_arn]
 
   dimensions = {
     RuleName = each.value.ruleName

@@ -8,10 +8,7 @@ resource "aws_cloudwatch_metric_alarm" "success_rate" {
   alarm_name        = format("%s-success-rate", each.value)
   alarm_description = format("Success rate for %s", each.value)
 
-  actions_enabled           = var.actions_enabled
-  alarm_actions             = var.actions_alarm
-  ok_actions                = var.actions_ok
-  insufficient_data_actions = var.actions_insufficient_data
+  alarm_actions             = [local.sns_topic_arn]
 
   comparison_operator = "LessThanThreshold"
   threshold           = var.threshold
@@ -70,7 +67,7 @@ resource "aws_cloudwatch_metric_alarm" "errors_alarm" {
   period              = 60
   threshold           = 1
   alarm_description   = "Alarm triggered if Lambda function errors exceed threshold"
-  alarm_actions       = var.actions_alarm
+  alarm_actions       = [local.sns_topic_arn]
 
   dimensions = {
     FunctionName = each.value
@@ -91,7 +88,7 @@ resource "aws_cloudwatch_metric_alarm" "duration_alarm" {
   threshold           = 3
 
   alarm_description = "Alarm triggered if Lambda function duration exceeds threshold"
-  alarm_actions     = var.actions_alarm
+  alarm_actions     = [local.sns_topic_arn]
 
   dimensions = {
     FunctionName = each.value
@@ -112,7 +109,7 @@ resource "aws_cloudwatch_metric_alarm" "throttles_alarm" {
   threshold           = 2
 
   alarm_description = "Alarm triggered if Lambda function throttles exceed threshold"
-  alarm_actions     = var.actions_alarm
+  alarm_actions     = [local.sns_topic_arn]
 
   dimensions = {
     FunctionName = each.value
@@ -132,7 +129,7 @@ resource "aws_cloudwatch_metric_alarm" "concurrent_executions_alarm" {
   threshold           = 4
 
   alarm_description = "Alarm triggered if Lambda function concurrent executions exceed threshold"
-  alarm_actions     = var.actions_alarm
+  alarm_actions     = [local.sns_topic_arn]
 
   dimensions = {
     FunctionName = each.value

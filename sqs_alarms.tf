@@ -16,7 +16,7 @@ resource "aws_cloudwatch_metric_alarm" "sqs_approx_num_messages_visible_alarm" {
   threshold           = 100
   alarm_description = "This alarm is triggered when the approximate number of messages visible in the SQS queue exceeds 100"
 
-  alarm_actions = []
+  alarm_actions = [local.sns_topic_arn]
 
   dimensions = {
     QueueName = each.value.queue
@@ -37,7 +37,7 @@ resource "aws_cloudwatch_metric_alarm" "sqs_approx_age_of_oldest_message_alarm" 
 
   alarm_description = "This alarm is triggered when the approximate age of the oldest message in the SQS queue exceeds 900 seconds"
 
-  alarm_actions = []
+  alarm_actions = [local.sns_topic_arn]
 
   dimensions = {
     QueueName = each.value.queue

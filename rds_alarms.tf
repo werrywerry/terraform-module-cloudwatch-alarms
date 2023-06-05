@@ -14,8 +14,8 @@ resource "aws_cloudwatch_metric_alarm" "total_iops_alarm" {
   namespace           = "AWS/RDS"
   period              = "60"
   statistic           = "SampleCount"
-  threshold           = "0"
-  alarm_actions       = []
+  threshold           = "1000"
+  alarm_actions       = [local.sns_topic_arn]
   dimensions = {
     DBInstanceIdentifier = each.value.rds
   }
@@ -33,7 +33,7 @@ resource "aws_cloudwatch_metric_alarm" "cpu_utilization_alarm" {
   statistic           = "Maximum"
   threshold           = "80"
   alarm_description   = "CPU utilization threshold exceeded for ${each.value.rds}"
-  alarm_actions       = []
+  alarm_actions       = [local.sns_topic_arn]
   dimensions = {
     DBInstanceIdentifier = each.value.rds
   }
@@ -51,7 +51,7 @@ resource "aws_cloudwatch_metric_alarm" "read_latency_alarm" {
   statistic           = "Maximum"
   threshold           = "1"
   alarm_description   = "Read latency threshold exceeded for ${each.value.rds}"
-  alarm_actions       = []
+  alarm_actions       = [local.sns_topic_arn]
   dimensions = {
     DBInstanceIdentifier = each.value.rds
   }
@@ -69,7 +69,7 @@ resource "aws_cloudwatch_metric_alarm" "write_latency_alarm" {
   statistic           = "Maximum"
   threshold           = "1"
   alarm_description   = "Write latency threshold exceeded for ${each.value.rds}"
-  alarm_actions       = []
+  alarm_actions       = [local.sns_topic_arn]
   dimensions = {
     DBInstanceIdentifier = each.value.rds
   }
@@ -87,7 +87,7 @@ resource "aws_cloudwatch_metric_alarm" "freeable_memory_alarm" {
   statistic           = "Minimum"
   threshold           = "0"
   alarm_description   = "Freeable memory threshold exceeded for ${each.value.rds}"
-  alarm_actions       = []
+  alarm_actions       = [local.sns_topic_arn]
   dimensions = {
     DBInstanceIdentifier = each.value.rds
   }
@@ -105,7 +105,7 @@ resource "aws_cloudwatch_metric_alarm" "free_storage_space_alarm" {
   statistic           = "Minimum"
   threshold           = "0"
   alarm_description   = "Freeable memory threshold exceeded for ${each.value.rds}"
-  alarm_actions       = []
+  alarm_actions       = [local.sns_topic_arn]
   dimensions = {
     DBInstanceIdentifier = each.value.rds
   }
