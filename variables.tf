@@ -36,6 +36,7 @@ variable "resource_list" {
 variable "lambda_function_name" {
   type        = string
   description = "The lambda function name for use with CloudWatch Metrics."
+  default = "staff-personal-change-event-processor-lambda"
 }
 
 variable "enable_metric_alarm" {
