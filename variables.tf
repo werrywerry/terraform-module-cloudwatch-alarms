@@ -39,8 +39,6 @@ variable "resource_list" {
   default = {
     "lambdas" : [
       { "lambda" : "staff-personal-change-event-processor-lambda" },
-      { "lambda" : "staff-personal-location-change-event-processor" },
-      { "lambda" : "staff-service-staffpersonal-request-handler-lambda" },
     ],
     "rdss" : [
       { "rds" : "staff-service-datastore",
@@ -48,19 +46,12 @@ variable "resource_list" {
         "total-memory": 1000,
         "total-storage": 1000 
       },
-      { "rds" : "room-service-datastore" ,
-        "total-iops": 1000,
-        "total-memory": 1000,
-        "total-storage": 1000 
-      }
     ],
     "apis" : [
       { "api" : "staff-service-v3" },
-      { "api" : "room-service-v1" }
     ],
     "dynamos" : [
       { "dynamo" : "PayloadService-PayloadsStore-dev-DynamoDB" },
-      { "dynamo" : "CapabilityDemo-AwsXray" }
     ],
     "eventbridges" : [
       { "name" : "staff-service-event-bus", 

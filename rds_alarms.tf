@@ -15,12 +15,13 @@ resource "aws_cloudwatch_metric_alarm" "total_iops_alarm" {
   
   metric_query {
     id = "total_iops"
-    expression = "READ_IOPS + WRITE_IOPS"
+    expression = "m1 + m2"
     label = "TotalIOPS"
+    return_data = true
   }
 
   metric_query {
-    id = "READ_IOPS"
+    id = "m1"
     metric {
       metric_name = "ReadIOPS"
       namespace = "AWS/RDS"
@@ -33,7 +34,7 @@ resource "aws_cloudwatch_metric_alarm" "total_iops_alarm" {
   }
 
   metric_query {
-    id = "WRITE_IOPS"
+    id = "m2"
     metric {
       metric_name = "WriteIOPS"
       namespace = "AWS/RDS"
