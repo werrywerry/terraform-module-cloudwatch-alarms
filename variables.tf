@@ -17,6 +17,9 @@ variable "resource_list" {
       name = string
       ruleName = string
     }))    
+    queues = list(object({
+      name = string      
+    }))      
     lambdas = list(object({
       lambda = string
     }))
@@ -41,7 +44,7 @@ variable "resource_list" {
       { "name" : "staff-service-event-bus", 
         "ruleName" : "CapabilityDemo-AwsXray" }
     ],
-    
+    "queues" : []
   }
 }
 
