@@ -1,7 +1,11 @@
-variable "name" {
+variable "service_name" {
   type        = string
   description = "The service name."
-  default     = "TerraformDashboardDemo"
+}
+
+variable "env" {
+  type        = string
+  description = "AWS environment"
 }
 
 variable "resource_list" {
@@ -27,31 +31,11 @@ variable "resource_list" {
       rds    = string
     }))
   })
-  default = {
-    "lambdas" : [
-      { "lambda" : "staff-personal-change-event-processor-lambda" },
-    ],
-    "rdss" : [
-      { "rds" : "staff-service-datastore" }
-    ],
-    "apis" : [
-      { "api" : "staff-service-v3" }
-    ],
-    "dynamos" : [
-      { "dynamo" : "CapabilityDemo-AwsXray" }
-    ],
-    "eventbridges" : [
-      { "name" : "staff-service-event-bus", 
-        "ruleName" : "CapabilityDemo-AwsXray" }
-    ],
-    "queues" : []
-  }
 }
 
 variable "lambda_function_name" {
   type        = string
   description = "The lambda function name for use with CloudWatch Metrics."
-  default = "staff-personal-change-event-processor-lambda"
 }
 
 variable "enable_metric_alarm" {

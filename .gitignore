@@ -1,6 +1,8 @@
 .DS_Store
+.gitignore
 .terraform
 terraform.tfstate
 terraform.tfstate.backup
 terraform.tfstate.*.backup
 terraform.exe
+Usersjbradley46.git-credentials

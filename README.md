@@ -8,9 +8,14 @@ To use this module, you need to provide a list of AWS resources that you want to
 (Please note, this is just an example. Resources provided should belong to the same service/system/adapter)
 
 ```hcl
+
 module "cloudwatch_alarms" {
   source = "git::https://bitbucket.det.nsw.edu.au/scm/entint/terraform-module-lambda-alarms.git?ref=feature/integrate-with-dashboards"
 
+  env = "dev"
+
+  service_name   = "TerraformDashboardAlarmDemo"
+  
   resource_list = {
     "lambdas" : [
       { "lambda" : "staff-personal-change-event-processor-lambda" },
@@ -28,7 +33,12 @@ module "cloudwatch_alarms" {
     "dynamos" : [
       { "dynamo" : "PayloadService-PayloadsStore-dev-DynamoDB" },
       { "dynamo" : "CapabilityDemo-AwsXray" }
-    ]
+    ],
+    "eventbridges" : [
+      { "name" : "staff-service-event-bus", 
+        "ruleName" : "CapabilityDemo-AwsXray" }
+    ],
+    "queues" : []
   }
 }
 
@@ -36,7 +46,10 @@ module "service-dashboard-example" {
   source = "git::https://bitbucket.det.nsw.edu.au/scm/entint/terraform-module-service-dashboard.git?ref=feature/initial"
 
   env = "dev"
-  service_name = "TerraformDashboardDemo"
-  resource_list = module.cloudwatch_alarms.resource_list
+
+  service_name   = "TerraformDashboardAlarmDemo"
+  
+  resource_list  = module.cloudwatch_alarms.resource_list
 }
+
 ```

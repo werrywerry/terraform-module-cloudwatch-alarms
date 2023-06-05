@@ -1,5 +1,5 @@
 resource "aws_sns_topic" "alarms_topic" {
-  name = var.name
+  name = "${local.service_name}-Alarms"
 }
 
 locals {
