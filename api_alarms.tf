@@ -12,7 +12,7 @@ resource "aws_cloudwatch_metric_alarm" "api_4xx_errors_alarm" {
   namespace           = "AWS/ApiGateway"
   period              = "300"
   statistic           = "SampleCount"
-  threshold           = "100"
+  threshold           = "1"
   alarm_description   = "This metric checks for 4xx errors in the ${each.value.api} API"
   alarm_actions       = [local.sns_topic_arn]
   dimensions = {
@@ -30,7 +30,7 @@ resource "aws_cloudwatch_metric_alarm" "api_5xx_errors_alarm" {
   namespace           = "AWS/ApiGateway"
   period              = "300"
   statistic           = "SampleCount"
-  threshold           = "50"
+  threshold           = "1"
   alarm_description   = "This metric checks for 5xx errors in the ${each.value.api} API"
   alarm_actions       = [local.sns_topic_arn]
   dimensions = {

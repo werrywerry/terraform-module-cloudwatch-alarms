@@ -85,7 +85,7 @@ resource "aws_cloudwatch_metric_alarm" "duration_alarm" {
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = 1
   period              = 60
-  threshold           = 3
+  threshold           = 2000
 
   alarm_description = "Alarm triggered if Lambda function duration exceeds threshold"
   alarm_actions     = [local.sns_topic_arn]
@@ -106,7 +106,7 @@ resource "aws_cloudwatch_metric_alarm" "throttles_alarm" {
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = 1
   period              = 60
-  threshold           = 2
+  threshold           = 1
 
   alarm_description = "Alarm triggered if Lambda function throttles exceed threshold"
   alarm_actions     = [local.sns_topic_arn]

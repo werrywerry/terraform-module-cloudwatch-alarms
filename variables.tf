@@ -1,11 +1,13 @@
 variable "service_name" {
   type        = string
   description = "The service name."
+  default = "TerraformDashboardAlarmDemo"
 }
 
 variable "env" {
   type        = string
   description = "AWS environment"
+  default = "dev"
 }
 
 variable "resource_list" {
@@ -29,8 +31,43 @@ variable "resource_list" {
     }))
     rdss = list(object({
       rds    = string
+      total-iops = number
+      total-memory = number
+      total-storage = number
     }))
   })
+  default = {
+    "lambdas" : [
+      { "lambda" : "staff-personal-change-event-processor-lambda" },
+      { "lambda" : "staff-personal-location-change-event-processor" },
+      { "lambda" : "staff-service-staffpersonal-request-handler-lambda" },
+    ],
+    "rdss" : [
+      { "rds" : "staff-service-datastore",
+        "total-iops": 1000,
+        "total-memory": 1000,
+        "total-storage": 1000 
+      },
+      { "rds" : "room-service-datastore" ,
+        "total-iops": 1000,
+        "total-memory": 1000,
+        "total-storage": 1000 
+      }
+    ],
+    "apis" : [
+      { "api" : "staff-service-v3" },
+      { "api" : "room-service-v1" }
+    ],
+    "dynamos" : [
+      { "dynamo" : "PayloadService-PayloadsStore-dev-DynamoDB" },
+      { "dynamo" : "CapabilityDemo-AwsXray" }
+    ],
+    "eventbridges" : [
+      { "name" : "staff-service-event-bus", 
+        "ruleName" : "CapabilityDemo-AwsXray" }
+    ],
+    "queues" : []
+  }
 }
 
 variable "lambda_function_name" {

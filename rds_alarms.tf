@@ -7,17 +7,42 @@ resource "aws_cloudwatch_metric_alarm" "total_iops_alarm" {
   for_each = { for idx, rds in local.rds_list : idx => rds }
 
   alarm_name        = format("%s-TotalIOPS", each.value.rds)
-  alarm_description = format("80%% of provisioned IOPS usage for %s", each.value.rds)
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = "1"
-  metric_name         = "ReadIOPS + WriteIOPS"
-  namespace           = "AWS/RDS"
-  period              = "60"
-  statistic           = "SampleCount"
-  threshold           = "1000"
   alarm_actions       = [local.sns_topic_arn]
-  dimensions = {
-    DBInstanceIdentifier = each.value.rds
+  threshold           = 0.8 * each.value.total-iops
+  alarm_description   = "Total IOPS threshold exceeded for ${each.value.rds}"
+  
+  metric_query {
+    id = "total_iops"
+    expression = "READ_IOPS + WRITE_IOPS"
+    label = "TotalIOPS"
+  }
+
+  metric_query {
+    id = "READ_IOPS"
+    metric {
+      metric_name = "ReadIOPS"
+      namespace = "AWS/RDS"
+      period = "60"
+      stat = "SampleCount"
+      dimensions = {
+        DBInstanceIdentifier = each.value.rds
+      }
+    }
+  }
+
+  metric_query {
+    id = "WRITE_IOPS"
+    metric {
+      metric_name = "WriteIOPS"
+      namespace = "AWS/RDS"
+      period = "60"
+      stat = "SampleCount"
+      dimensions = {
+        DBInstanceIdentifier = each.value.rds
+      }
+    }
   }
 }
 
@@ -49,7 +74,7 @@ resource "aws_cloudwatch_metric_alarm" "read_latency_alarm" {
   namespace           = "AWS/RDS"
   period              = "60"
   statistic           = "Maximum"
-  threshold           = "1"
+  threshold           = "200"
   alarm_description   = "Read latency threshold exceeded for ${each.value.rds}"
   alarm_actions       = [local.sns_topic_arn]
   dimensions = {
@@ -67,7 +92,7 @@ resource "aws_cloudwatch_metric_alarm" "write_latency_alarm" {
   namespace           = "AWS/RDS"
   period              = "60"
   statistic           = "Maximum"
-  threshold           = "1"
+  threshold           = "200"
   alarm_description   = "Write latency threshold exceeded for ${each.value.rds}"
   alarm_actions       = [local.sns_topic_arn]
   dimensions = {
@@ -85,7 +110,7 @@ resource "aws_cloudwatch_metric_alarm" "freeable_memory_alarm" {
   namespace           = "AWS/RDS"
   period              = "60"
   statistic           = "Minimum"
-  threshold           = "0"
+  threshold           = 0.2 * each.value.total-memory #Bytes
   alarm_description   = "Freeable memory threshold exceeded for ${each.value.rds}"
   alarm_actions       = [local.sns_topic_arn]
   dimensions = {
@@ -103,7 +128,7 @@ resource "aws_cloudwatch_metric_alarm" "free_storage_space_alarm" {
   namespace           = "AWS/RDS"
   period              = "60"
   statistic           = "Minimum"
-  threshold           = "0"
+  threshold           = 0.8 * each.value.total-storage #Bytes
   alarm_description   = "Freeable memory threshold exceeded for ${each.value.rds}"
   alarm_actions       = [local.sns_topic_arn]
   dimensions = {
