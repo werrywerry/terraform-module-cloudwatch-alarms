@@ -13,6 +13,13 @@ variable "resource_list" {
     dynamos = list(object({
       dynamo = string
     }))
+    eventbridges = list(object({
+      name = string
+      ruleName = string
+    }))    
+    queues = list(object({
+      name = string      
+    }))      
     lambdas = list(object({
       lambda = string
     }))
@@ -32,7 +39,12 @@ variable "resource_list" {
     ],
     "dynamos" : [
       { "dynamo" : "CapabilityDemo-AwsXray" }
-    ]
+    ],
+    "eventbridges" : [
+      { "name" : "staff-service-event-bus", 
+        "ruleName" : "CapabilityDemo-AwsXray" }
+    ],
+    "queues" : []
   }
 }
 
