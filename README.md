@@ -9,8 +9,9 @@ To use this module, you need to provide a list of AWS resources that you want to
 
 ```hcl
 
+
 module "cloudwatch_alarms" {
-  source = "git::https://bitbucket.det.nsw.edu.au/scm/entint/terraform-module-lambda-alarms.git?ref=feature/integrate-with-dashboards"
+  source = "git::https://bitbucket.det.nsw.edu.au/scm/entint/terraform-module-cloudwatch-alarms.git?ref=feature/integrate-with-dashboards"
 
   env = "dev"
 
@@ -23,18 +24,35 @@ module "cloudwatch_alarms" {
       { "lambda" : "staff-service-staffpersonal-request-handler-lambda" },
     ],
     "rdss" : [
-      { "rds" : "staff-service-datastore" },
-      { "rds" : "room-service-datastore" }
+      # If IOPS are set to on-demand, select a total IOPS of 100 and adjust as required
+      { "rds" : "staff-service-datastore",
+        "total-iops": 100,
+        "total-memory": 5.34 * 1024 *1024 * 1024, # 5.34 GB
+        "total-storage": 418 * 1024 * 1024 * 1024 # 418 GB 
+      },
+      { "rds" : "room-service-datastore" ,
+        "total-iops": 1000,
+        "total-memory": 5.34 * 1024 *1024 * 1024, # 5.34 GB
+        "total-storage": 418 * 1024 * 1024 * 1024 # 418 GB 
+      }
     ],
     "apis" : [
       { "api" : "staff-service-v3" },
       { "api" : "room-service-v1" }
     ],
     "dynamos" : [
-      { "dynamo" : "PayloadService-PayloadsStore-dev-DynamoDB" },
-      { "dynamo" : "CapabilityDemo-AwsXray" }
+      # If read/write capacity is set to on-demand, set the read/write units to 100 and adjust as necessary
+      { "dynamo" : "PayloadService-PayloadsStore-dev-DynamoDB",
+        "read_units" : 100,
+        "write_units" : 100
+      },
+      { "dynamo" : "CapabilityDemo-AwsXray",
+        "read_units" : 100,
+        "write_units" : 100
+      }
     ],
     "eventbridges" : [
+      # Provide the event bus name and rule name for each even bus rule. 
       { "name" : "staff-service-event-bus", 
         "ruleName" : "CapabilityDemo-AwsXray" }
     ],
@@ -42,8 +60,9 @@ module "cloudwatch_alarms" {
   }
 }
 
+# terraform-module-cloudwatch-alarms will provide the outputs to be consumed by terraform-module-cloudwatch-dashboards
 module "service-dashboard-example" {
-  source = "git::https://bitbucket.det.nsw.edu.au/scm/entint/terraform-module-service-dashboard.git?ref=feature/initial"
+  source = "git::https://bitbucket.det.nsw.edu.au/scm/entint/terraform-module-cloudwatch-dashboards.git?ref=feature/initial"
 
   env = "dev"
 
@@ -51,5 +70,6 @@ module "service-dashboard-example" {
   
   resource_list  = module.cloudwatch_alarms.resource_list
 }
+
 
 ```

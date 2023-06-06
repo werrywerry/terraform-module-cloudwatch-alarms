@@ -45,7 +45,7 @@ locals {
     }
   ]
 
-    apis = [
+  apis = [
     for idx, api in local.api_list : {
       "api" = api.api,
       "alarms" = [

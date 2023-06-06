@@ -1,22 +1,22 @@
 
 locals {
-  rds_list    = [for rds in var.resource_list["rdss"] : rds]
+  rds_list = [for rds in var.resource_list["rdss"] : rds]
 }
 
 resource "aws_cloudwatch_metric_alarm" "total_iops_alarm" {
   for_each = { for idx, rds in local.rds_list : idx => rds }
 
-  alarm_name        = format("%s-TotalIOPS", each.value.rds)
+  alarm_name          = format("%s-TotalIOPS", each.value.rds)
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = "1"
   alarm_actions       = [local.sns_topic_arn]
   threshold           = 0.8 * each.value.total-iops
   alarm_description   = "Total IOPS threshold exceeded for ${each.value.rds}"
-  
+
   metric_query {
-    id = "total_iops"
-    expression = "m1 + m2"
-    label = "TotalIOPS"
+    id          = "total_iops"
+    expression  = "m1 + m2"
+    label       = "TotalIOPS"
     return_data = true
   }
 
@@ -24,9 +24,9 @@ resource "aws_cloudwatch_metric_alarm" "total_iops_alarm" {
     id = "m1"
     metric {
       metric_name = "ReadIOPS"
-      namespace = "AWS/RDS"
-      period = "60"
-      stat = "SampleCount"
+      namespace   = "AWS/RDS"
+      period      = "60"
+      stat        = "SampleCount"
       dimensions = {
         DBInstanceIdentifier = each.value.rds
       }
@@ -37,9 +37,9 @@ resource "aws_cloudwatch_metric_alarm" "total_iops_alarm" {
     id = "m2"
     metric {
       metric_name = "WriteIOPS"
-      namespace = "AWS/RDS"
-      period = "60"
-      stat = "SampleCount"
+      namespace   = "AWS/RDS"
+      period      = "60"
+      stat        = "SampleCount"
       dimensions = {
         DBInstanceIdentifier = each.value.rds
       }
@@ -50,7 +50,7 @@ resource "aws_cloudwatch_metric_alarm" "total_iops_alarm" {
 resource "aws_cloudwatch_metric_alarm" "cpu_utilization_alarm" {
   for_each = { for idx, rds in local.rds_list : idx => rds }
 
-  alarm_name        = format("%s-CPUUtilization", each.value.rds)
+  alarm_name          = format("%s-CPUUtilization", each.value.rds)
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = "1"
   metric_name         = "CPUUtilization"
@@ -68,7 +68,7 @@ resource "aws_cloudwatch_metric_alarm" "cpu_utilization_alarm" {
 resource "aws_cloudwatch_metric_alarm" "read_latency_alarm" {
   for_each = { for idx, rds in local.rds_list : idx => rds }
 
-  alarm_name        = format("%s-ReadLatency", each.value.rds)
+  alarm_name          = format("%s-ReadLatency", each.value.rds)
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = "1"
   metric_name         = "ReadLatency"
@@ -86,7 +86,7 @@ resource "aws_cloudwatch_metric_alarm" "read_latency_alarm" {
 resource "aws_cloudwatch_metric_alarm" "write_latency_alarm" {
   for_each = { for idx, rds in local.rds_list : idx => rds }
 
-  alarm_name        = format("%s-WriteLatency", each.value.rds)
+  alarm_name          = format("%s-WriteLatency", each.value.rds)
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = "1"
   metric_name         = "WriteLatency"
@@ -104,7 +104,7 @@ resource "aws_cloudwatch_metric_alarm" "write_latency_alarm" {
 resource "aws_cloudwatch_metric_alarm" "freeable_memory_alarm" {
   for_each = { for idx, rds in local.rds_list : idx => rds }
 
-  alarm_name        = format("%s-FreeableMemory", each.value.rds)
+  alarm_name          = format("%s-FreeableMemory", each.value.rds)
   comparison_operator = "LessThanThreshold"
   evaluation_periods  = "1"
   metric_name         = "FreeableMemory"
@@ -122,7 +122,7 @@ resource "aws_cloudwatch_metric_alarm" "freeable_memory_alarm" {
 resource "aws_cloudwatch_metric_alarm" "free_storage_space_alarm" {
   for_each = { for idx, rds in local.rds_list : idx => rds }
 
-  alarm_name        = format("%s-FreeStorageSpace", each.value.rds)
+  alarm_name          = format("%s-FreeStorageSpace", each.value.rds)
   comparison_operator = "LessThanThreshold"
   evaluation_periods  = "1"
   metric_name         = "FreeStorageSpace"

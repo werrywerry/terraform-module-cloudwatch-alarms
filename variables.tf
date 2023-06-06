@@ -1,38 +1,40 @@
 variable "service_name" {
   type        = string
   description = "The service name."
-  default = "TerraformDashboardAlarmDemo"
+  default     = "TerraformDashboardAlarmDemo"
 }
 
 variable "env" {
   type        = string
   description = "AWS environment"
-  default = "dev"
+  default     = "dev"
 }
 
 variable "resource_list" {
   description = "List of AWS resources and their required alarm ARNs"
   type = object({
     apis = list(object({
-      api    = string
+      api = string
     }))
     dynamos = list(object({
-      dynamo = string
+      dynamo      = string
+      read_units  = number
+      write_units = number
     }))
     eventbridges = list(object({
-      name = string
+      name     = string
       ruleName = string
-    }))    
+    }))
     queues = list(object({
-      name = string      
-    }))      
+      name = string
+    }))
     lambdas = list(object({
       lambda = string
     }))
     rdss = list(object({
-      rds    = string
-      total-iops = number
-      total-memory = number
+      rds           = string
+      total-iops    = number
+      total-memory  = number
       total-storage = number
     }))
   })
@@ -42,20 +44,23 @@ variable "resource_list" {
     ],
     "rdss" : [
       { "rds" : "staff-service-datastore",
-        "total-iops": 1000,
-        "total-memory": 1000,
-        "total-storage": 1000 
+        "total-iops" : 1000,
+        "total-memory" : 1000,
+        "total-storage" : 1000
       },
     ],
     "apis" : [
       { "api" : "staff-service-v3" },
     ],
     "dynamos" : [
-      { "dynamo" : "PayloadService-PayloadsStore-dev-DynamoDB" },
+      { "dynamo" : "PayloadService-PayloadsStore-dev-DynamoDB",
+        "read_units" : 100,
+        "write_units" : 100
+      },
     ],
     "eventbridges" : [
-      { "name" : "staff-service-event-bus", 
-        "ruleName" : "CapabilityDemo-AwsXray" }
+      { "name" : "staff-service-event-bus",
+      "ruleName" : "CapabilityDemo-AwsXray" }
     ],
     "queues" : []
   }
@@ -64,7 +69,7 @@ variable "resource_list" {
 variable "lambda_function_name" {
   type        = string
   description = "The lambda function name for use with CloudWatch Metrics."
-  default = "staff-personal-change-event-processor-lambda"
+  default     = "staff-personal-change-event-processor-lambda"
 }
 
 variable "enable_metric_alarm" {

@@ -8,7 +8,7 @@ resource "aws_cloudwatch_metric_alarm" "success_rate" {
   alarm_name        = format("%s-success-rate", each.value)
   alarm_description = format("Success rate for %s", each.value)
 
-  alarm_actions             = [local.sns_topic_arn]
+  alarm_actions = [local.sns_topic_arn]
 
   comparison_operator = "LessThanThreshold"
   threshold           = var.threshold
@@ -121,7 +121,7 @@ resource "aws_cloudwatch_metric_alarm" "throttles_alarm" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "concurrent_executions_alarm" {
-  for_each = { for idx, lambda_obj in local.lambda_list : idx => lambda_obj }
+  for_each            = { for idx, lambda_obj in local.lambda_list : idx => lambda_obj }
   alarm_name          = "${each.value}-ConcurrentExecutions"
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = 1
