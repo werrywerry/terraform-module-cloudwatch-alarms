@@ -75,7 +75,7 @@ resource "aws_cloudwatch_metric_alarm" "read_latency_alarm" {
   namespace           = "AWS/RDS"
   period              = "60"
   statistic           = "Maximum"
-  threshold           = "200"
+  threshold           = "1"
   alarm_description   = "Read latency threshold exceeded for ${each.value.rds}"
   alarm_actions       = [local.sns_topic_arn]
   dimensions = {
@@ -93,7 +93,7 @@ resource "aws_cloudwatch_metric_alarm" "write_latency_alarm" {
   namespace           = "AWS/RDS"
   period              = "60"
   statistic           = "Maximum"
-  threshold           = "200"
+  threshold           = "1"
   alarm_description   = "Write latency threshold exceeded for ${each.value.rds}"
   alarm_actions       = [local.sns_topic_arn]
   dimensions = {
