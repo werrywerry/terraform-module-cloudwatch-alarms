@@ -27,6 +27,7 @@ resource "aws_cloudwatch_metric_alarm" "total_iops_alarm" {
       namespace   = "AWS/RDS"
       period      = "60"
       stat        = "SampleCount"
+      unit        = "Count"
       dimensions = {
         DBInstanceIdentifier = each.value.rds
       }
@@ -40,6 +41,7 @@ resource "aws_cloudwatch_metric_alarm" "total_iops_alarm" {
       namespace   = "AWS/RDS"
       period      = "60"
       stat        = "SampleCount"
+      unit        = "Count"
       dimensions = {
         DBInstanceIdentifier = each.value.rds
       }
@@ -75,7 +77,7 @@ resource "aws_cloudwatch_metric_alarm" "read_latency_alarm" {
   namespace           = "AWS/RDS"
   period              = "60"
   statistic           = "Maximum"
-  threshold           = 1 #Seconds
+  threshold           = 1 * 0.05 #5 millisecond in seconds
   alarm_description   = "Read latency threshold exceeded for ${each.value.rds}"
   alarm_actions       = [local.sns_topic_arn]
   dimensions = {
@@ -93,7 +95,7 @@ resource "aws_cloudwatch_metric_alarm" "write_latency_alarm" {
   namespace           = "AWS/RDS"
   period              = "60"
   statistic           = "Maximum"
-  threshold           = 1 #Seconds
+  threshold           = 1 * 0.05 #5 millisecond in seconds
   alarm_description   = "Write latency threshold exceeded for ${each.value.rds}"
   alarm_actions       = [local.sns_topic_arn]
   dimensions = {
