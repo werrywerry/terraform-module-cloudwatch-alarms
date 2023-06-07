@@ -10,7 +10,7 @@ resource "aws_cloudwatch_metric_alarm" "total_iops_alarm" {
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = "1"
   alarm_actions       = [local.sns_topic_arn]
-  threshold           = 0.8 * each.value.total-iops
+  threshold           = 0.8 * each.value.total-iops #Total IOPS
   alarm_description   = "Total IOPS threshold exceeded for ${each.value.rds}"
 
   metric_query {
@@ -57,7 +57,7 @@ resource "aws_cloudwatch_metric_alarm" "cpu_utilization_alarm" {
   namespace           = "AWS/RDS"
   period              = "60"
   statistic           = "Maximum"
-  threshold           = "80"
+  threshold           = "80" #% CPU Usage
   alarm_description   = "CPU utilization threshold exceeded for ${each.value.rds}"
   alarm_actions       = [local.sns_topic_arn]
   dimensions = {
@@ -75,7 +75,7 @@ resource "aws_cloudwatch_metric_alarm" "read_latency_alarm" {
   namespace           = "AWS/RDS"
   period              = "60"
   statistic           = "Maximum"
-  threshold           = "1"
+  threshold           = 1 #Seconds
   alarm_description   = "Read latency threshold exceeded for ${each.value.rds}"
   alarm_actions       = [local.sns_topic_arn]
   dimensions = {
@@ -88,12 +88,12 @@ resource "aws_cloudwatch_metric_alarm" "write_latency_alarm" {
 
   alarm_name          = format("%s-WriteLatency", each.value.rds)
   comparison_operator = "GreaterThanOrEqualToThreshold"
-  evaluation_periods  = "1"
+  evaluation_periods  = "1" 
   metric_name         = "WriteLatency"
   namespace           = "AWS/RDS"
   period              = "60"
   statistic           = "Maximum"
-  threshold           = "1"
+  threshold           = 1 #Seconds
   alarm_description   = "Write latency threshold exceeded for ${each.value.rds}"
   alarm_actions       = [local.sns_topic_arn]
   dimensions = {

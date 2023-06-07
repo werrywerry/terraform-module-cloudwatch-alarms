@@ -12,7 +12,7 @@ resource "aws_cloudwatch_metric_alarm" "api_4xx_errors_alarm" {
   namespace           = "AWS/ApiGateway"
   period              = "300"
   statistic           = "SampleCount"
-  threshold           = "1"
+  threshold           = "1" #4xx errors
   alarm_description   = "This metric checks for 4xx errors in the ${each.value.api} API"
   alarm_actions       = [local.sns_topic_arn]
   dimensions = {
@@ -30,7 +30,7 @@ resource "aws_cloudwatch_metric_alarm" "api_5xx_errors_alarm" {
   namespace           = "AWS/ApiGateway"
   period              = "300"
   statistic           = "SampleCount"
-  threshold           = "1"
+  threshold           = "1" #5xx Errors
   alarm_description   = "This metric checks for 5xx errors in the ${each.value.api} API"
   alarm_actions       = [local.sns_topic_arn]
   dimensions = {
@@ -48,7 +48,7 @@ resource "aws_cloudwatch_metric_alarm" "latency_alarm" {
   namespace           = "AWS/ApiGateway"
   period              = "60"
   statistic           = "Average"
-  threshold           = "200"
+  threshold           = "1000" #Milliseconds
   alarm_description   = format("Latency threshold exceeded for API %s", each.value.api)
   alarm_actions       = [local.sns_topic_arn]
   dimensions = {
@@ -66,7 +66,7 @@ resource "aws_cloudwatch_metric_alarm" "integration_latency_alarm" {
   namespace           = "AWS/ApiGateway"
   period              = "60"
   statistic           = "Average"
-  threshold           = "300"
+  threshold           = "2000" #Milliseconds
   alarm_description   = format("Integration latency threshold exceeded for API %s", each.value.api)
   alarm_actions       = [local.sns_topic_arn]
   dimensions = {

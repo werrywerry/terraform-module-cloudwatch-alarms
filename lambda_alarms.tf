@@ -1,17 +1,17 @@
 locals {
-  lambda_list = [for lambda_obj in var.resource_list["lambdas"] : lambda_obj.lambda]
+  lambda_list = [for lambda_obj in var.resource_list["lambdas"] : lambda_obj]
 }
 
 resource "aws_cloudwatch_metric_alarm" "success_rate" {
   for_each = { for idx, lambda_obj in local.lambda_list : idx => lambda_obj }
 
-  alarm_name        = format("%s-success-rate", each.value)
-  alarm_description = format("Success rate for %s", each.value)
+  alarm_name        = format("%s-success-rate", each.value.lambda)
+  alarm_description = format("Success rate for %s", each.value.lambda)
 
   alarm_actions = [local.sns_topic_arn]
 
   comparison_operator = "LessThanThreshold"
-  threshold           = var.threshold
+  threshold           = var.threshold #% of executions that were successfull
   evaluation_periods  = var.evaluation_periods
   treat_missing_data  = "notBreaching"
 
@@ -33,7 +33,7 @@ resource "aws_cloudwatch_metric_alarm" "success_rate" {
       unit        = "Count"
 
       dimensions = {
-        FunctionName = each.value
+        FunctionName = each.value.lambda
       }
     }
   }
@@ -49,7 +49,7 @@ resource "aws_cloudwatch_metric_alarm" "success_rate" {
       unit        = "Count"
 
       dimensions = {
-        FunctionName = each.value
+        FunctionName = each.value.lambda
       }
     }
   }
@@ -61,16 +61,16 @@ resource "aws_cloudwatch_metric_alarm" "success_rate" {
 resource "aws_cloudwatch_metric_alarm" "errors_alarm" {
   for_each = { for idx, lambda_obj in local.lambda_list : idx => lambda_obj }
 
-  alarm_name          = "${each.value}-Errors"
+  alarm_name          = "${each.value.lambda}-Errors"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = 1
   period              = 60
-  threshold           = 1
+  threshold           = 1 #Errors
   alarm_description   = "Alarm triggered if Lambda function errors exceed threshold"
   alarm_actions       = [local.sns_topic_arn]
 
   dimensions = {
-    FunctionName = each.value
+    FunctionName = each.value.lambda
   }
 
   metric_name = "Errors"
@@ -81,17 +81,17 @@ resource "aws_cloudwatch_metric_alarm" "errors_alarm" {
 resource "aws_cloudwatch_metric_alarm" "duration_alarm" {
   for_each = { for idx, lambda_obj in local.lambda_list : idx => lambda_obj }
 
-  alarm_name          = "${each.value}-Duration"
+  alarm_name          = "${each.value.lambda}-Duration"
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = 1
   period              = 60
-  threshold           = 2000
+  threshold           = 0.75 * each.value.timeout #Milliseconds
 
   alarm_description = "Alarm triggered if Lambda function duration exceeds threshold"
   alarm_actions     = [local.sns_topic_arn]
 
   dimensions = {
-    FunctionName = each.value
+    FunctionName = each.value.lambda
   }
 
   metric_name = "Duration"
@@ -102,17 +102,17 @@ resource "aws_cloudwatch_metric_alarm" "duration_alarm" {
 resource "aws_cloudwatch_metric_alarm" "throttles_alarm" {
   for_each = { for idx, lambda_obj in local.lambda_list : idx => lambda_obj }
 
-  alarm_name          = "${each.value}-Throttles"
+  alarm_name          = "${each.value.lambda}-Throttles"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = 1
   period              = 60
-  threshold           = 1
+  threshold           = 1 #Throttles
 
   alarm_description = "Alarm triggered if Lambda function throttles exceed threshold"
   alarm_actions     = [local.sns_topic_arn]
 
   dimensions = {
-    FunctionName = each.value
+    FunctionName = each.value.lambda
   }
 
   metric_name = "Throttles"
@@ -122,17 +122,17 @@ resource "aws_cloudwatch_metric_alarm" "throttles_alarm" {
 
 resource "aws_cloudwatch_metric_alarm" "concurrent_executions_alarm" {
   for_each            = { for idx, lambda_obj in local.lambda_list : idx => lambda_obj }
-  alarm_name          = "${each.value}-ConcurrentExecutions"
+  alarm_name          = "${each.value.lambda}-ConcurrentExecutions"
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = 1
   period              = 60
-  threshold           = 4
+  threshold           = 4 #Concurrent Executions
 
   alarm_description = "Alarm triggered if Lambda function concurrent executions exceed threshold"
   alarm_actions     = [local.sns_topic_arn]
 
   dimensions = {
-    FunctionName = each.value
+    FunctionName = each.value.lambda
   }
 
   metric_name = "ConcurrentExecutions"

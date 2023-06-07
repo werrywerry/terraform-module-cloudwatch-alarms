@@ -1,7 +1,8 @@
 # Terraform Module: CloudWatch Alarms
 
-This module helps set up all necessary CloudWatch Alarms for the AWS resources provided. In addition, it integrates with `terraform-module-service-dashboards` to create and manage corresponding CloudWatch monitoring dashboards. Alarms are then mapped to their relevant dashboard widgets.
+This module sets up all necessary CloudWatch Alarms for the AWS resources provided. It will also create an SNS topic and set it as the target for alarm actions.
 
+In addition, it integrates with terraform-module-cloudwatch-dashboards to create and manage corresponding CloudWatch monitoring dashboards. Alarms are then mapped to their relevant dashboard widgets.
 ## Usage
 
 To use this module, you need to provide a list of AWS resources that you want to monitor. Here's an example:
@@ -19,9 +20,12 @@ module "cloudwatch_alarms" {
   
   resource_list = {
     "lambdas" : [
-      { "lambda" : "staff-personal-change-event-processor-lambda" },
-      { "lambda" : "staff-personal-location-change-event-processor" },
-      { "lambda" : "staff-service-staffpersonal-request-handler-lambda" },
+      { "lambda" : "staff-personal-change-event-processor-lambda",
+        "timeout" : 3000 }, #ms
+      { "lambda" : "staff-personal-location-change-event-processor",
+        "timeout" : 3000 },
+      { "lambda" : "staff-service-staffpersonal-request-handler-lambda",
+        "timeout" : 3000 },
     ],
     "rdss" : [
       # If IOPS are set to on-demand, select a total IOPS of 100 and adjust as required
@@ -32,8 +36,8 @@ module "cloudwatch_alarms" {
       },
       { "rds" : "room-service-datastore" ,
         "total-iops": 1000,
-        "total-memory": 5.34 * 1024 *1024 * 1024, # 5.34 GB
-        "total-storage": 418 * 1024 * 1024 * 1024 # 418 GB 
+        "total-memory": 5.34 * 1024 *1024 * 1024, # 5.34 GB in Bytes
+        "total-storage": 418 * 1024 * 1024 * 1024 # 418 GB in Bytes
       }
     ],
     "apis" : [
@@ -52,7 +56,7 @@ module "cloudwatch_alarms" {
       }
     ],
     "eventbridges" : [
-      # Provide the event bus name and rule name for each even bus rule. 
+      # Provide the event bus name and rule name for each event bus rule. 
       { "name" : "staff-service-event-bus", 
         "ruleName" : "CapabilityDemo-AwsXray" }
     ],

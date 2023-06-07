@@ -29,7 +29,8 @@ variable "resource_list" {
       name = string
     }))
     lambdas = list(object({
-      lambda = string
+      lambda  = string
+      timeout = number
     }))
     rdss = list(object({
       rds           = string
@@ -40,7 +41,8 @@ variable "resource_list" {
   })
   default = {
     "lambdas" : [
-      { "lambda" : "staff-personal-change-event-processor-lambda" },
+      { "lambda" : "staff-personal-change-event-processor-lambda",
+        "timeout" : 3 },
     ],
     "rdss" : [
       { "rds" : "staff-service-datastore",
