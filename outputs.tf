@@ -1,7 +1,7 @@
 locals {
   lambdas = [
     for idx, lambda_obj in local.lambda_list : {
-      "lambda" = lambda_obj,
+      "lambda" = lambda_obj.lambda,
       "alarms" = [
         {
           "error_alarm_arn" = aws_cloudwatch_metric_alarm.errors_alarm[idx].arn
