@@ -20,21 +20,29 @@ module "cloudwatch_alarms" {
   
   resource_list = {
     "lambdas" : [
-      { "lambda" : "staff-personal-change-event-processor-lambda",
-        "timeout" : 3000 }, #ms
-      { "lambda" : "staff-personal-location-change-event-processor",
-        "timeout" : 3000 },
-      { "lambda" : "staff-service-staffpersonal-request-handler-lambda",
-        "timeout" : 3000 },
+      {
+        "lambda" : "staff-personal-change-event-processor-lambda",
+        "timeout" : 3000  #ms
+      },
+      {
+        "lambda" : "staff-personal-location-change-event-processor",
+        "timeout" : 3000
+      },
+      {
+        "lambda" : "staff-service-staffpersonal-request-handler-lambda",
+        "timeout" : 3000
+      },
     ],
     "rdss" : [
       # If IOPS are set to on-demand, select a total IOPS of 100 and adjust as required
-      { "rds" : "staff-service-datastore",
+      {
+        "rds" : "staff-service-datastore",
         "total-iops": 100,
         "total-memory": 5.34 * 1024 *1024 * 1024, # 5.34 GB
         "total-storage": 418 * 1024 * 1024 * 1024 # 418 GB 
       },
-      { "rds" : "room-service-datastore" ,
+      {
+        "rds" : "room-service-datastore" ,
         "total-iops": 1000,
         "total-memory": 5.34 * 1024 *1024 * 1024, # 5.34 GB in Bytes
         "total-storage": 418 * 1024 * 1024 * 1024 # 418 GB in Bytes
@@ -46,19 +54,23 @@ module "cloudwatch_alarms" {
     ],
     "dynamos" : [
       # If read/write capacity is set to on-demand, set the read/write units to 100 and adjust as necessary
-      { "dynamo" : "PayloadService-PayloadsStore-dev-DynamoDB",
+      {
+        "dynamo" : "PayloadService-PayloadsStore-dev-DynamoDB",
         "read_units" : 100,
         "write_units" : 100
       },
-      { "dynamo" : "CapabilityDemo-AwsXray",
+      {
+        "dynamo" : "CapabilityDemo-AwsXray",
         "read_units" : 100,
         "write_units" : 100
       }
     ],
     "eventbridges" : [
       # Provide the event bus name and rule name for each event bus rule. 
-      { "name" : "staff-service-event-bus", 
-        "ruleName" : "CapabilityDemo-AwsXray" }
+      {
+        "name" : "staff-service-event-bus", 
+        "ruleName" : "CapabilityDemo-AwsXray"
+      }
     ],
     "queues" : []
   }

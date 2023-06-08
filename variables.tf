@@ -1,13 +1,11 @@
 variable "service_name" {
   type        = string
   description = "The service name."
-  default     = "TerraformDashboardAlarmDemo"
 }
 
 variable "env" {
   type        = string
   description = "AWS environment"
-  default     = "dev"
 }
 
 variable "resource_list" {
@@ -39,33 +37,6 @@ variable "resource_list" {
       total-storage = number
     }))
   })
-  default = {
-    "lambdas" : [
-      { "lambda" : "staff-personal-change-event-processor-lambda",
-        "timeout" : 3 },
-    ],
-    "rdss" : [
-      { "rds" : "staff-service-datastore",
-        "total-iops" : 1000,
-        "total-memory" : 1000,
-        "total-storage" : 1000
-      },
-    ],
-    "apis" : [
-      { "api" : "staff-service-v3" },
-    ],
-    "dynamos" : [
-      { "dynamo" : "PayloadService-PayloadsStore-dev-DynamoDB",
-        "read_units" : 100,
-        "write_units" : 100
-      },
-    ],
-    "eventbridges" : [
-      { "name" : "staff-service-event-bus",
-      "ruleName" : "CapabilityDemo-AwsXray" }
-    ],
-    "queues" : []
-  }
 }
 
 variable "lambda_function_name" {
