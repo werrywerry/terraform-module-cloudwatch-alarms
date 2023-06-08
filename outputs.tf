@@ -80,6 +80,14 @@ locals {
   ]
 }
 
+output "env" {
+  value = var.env
+}
+
+output "service_name" {
+  value = var.service_name
+}
+
 output "resource_list" {
   value = {
     apis    = local.apis,
