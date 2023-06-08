@@ -80,12 +80,11 @@ module "cloudwatch_alarms" {
 module "service-dashboard-example" {
   source = "git::https://bitbucket.det.nsw.edu.au/scm/entint/terraform-module-cloudwatch-dashboards.git?ref=feature/initial"
 
-  env = "dev"
+  env = module.cloudwatch_alarms.env
 
-  service_name   = "TerraformDashboardAlarmDemo"
+  service_name   = module.cloudwatch_alarms.service_name
   
-  resource_list  = module.cloudwatch_alarms.resource_list
-}
+  resource_list  = module.cloudwatch_alarms.resource_list}
 
 
 ```
