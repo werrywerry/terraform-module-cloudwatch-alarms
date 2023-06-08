@@ -131,8 +131,8 @@ resource "aws_cloudwatch_metric_alarm" "free_storage_space_alarm" {
   namespace           = "AWS/RDS"
   period              = "60"
   statistic           = "Minimum"
-  threshold           = 0.8 * each.value.total-storage #Bytes
-  alarm_description   = "Freeable memory threshold exceeded for ${each.value.rds}"
+  threshold           = 0.1 * each.value.total-storage #Bytes
+  alarm_description   = "Free storage threshold exceeded for ${each.value.rds}"
   alarm_actions       = [local.sns_topic_arn]
   dimensions = {
     DBInstanceIdentifier = each.value.rds
