@@ -95,7 +95,7 @@ resource "aws_cloudwatch_metric_alarm" "write_latency_alarm" {
   namespace           = "AWS/RDS"
   period              = "60"
   statistic           = "Maximum"
-  threshold           = 1 * 0.1 #5 millisecond in seconds
+  threshold           = 1 * 0.1 #10 millisecond in seconds
   alarm_description   = "Write latency threshold exceeded for ${each.value.rds}"
   alarm_actions       = [local.sns_topic_arn]
   dimensions = {

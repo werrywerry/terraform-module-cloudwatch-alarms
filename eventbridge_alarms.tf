@@ -5,7 +5,7 @@ locals {
 resource "aws_cloudwatch_metric_alarm" "eventbridge_dead_letter_alarm" {
   for_each = { for idx, eventbridge in local.eventbridge_list : idx => eventbridge }
 
-  alarm_name          = "eventbridge_dead_letter_alarm"
+  alarm_name          = "${each.value.name}-DeadLetterInvocations"
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = 1
   metric_name         = "DeadLetterInvocations"
