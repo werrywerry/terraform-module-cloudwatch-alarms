@@ -15,6 +15,9 @@ locals {
         {
           "executions_alarm_arn" = aws_cloudwatch_metric_alarm.concurrent_executions_alarm[idx].arn
         },
+        {
+          "success_rate_alarm_arn" = aws_cloudwatch_metric_alarm.success_rate[idx].arn
+        },
       ]
     }
   ]

@@ -84,7 +84,7 @@ module "service-dashboard-example" {
 
   service_name   = module.cloudwatch_alarms.service_name
   
-  resource_list  = module.cloudwatch_alarms.resource_list}
+  resource_list  = module.cloudwatch_alarms.resource_listI}
 
 
 ```
