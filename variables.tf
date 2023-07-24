@@ -1,13 +1,49 @@
-variable "name" {
+variable "service_name" {
   type        = string
   description = "The service name."
+}
+
+variable "env" {
+  type        = string
+  description = "AWS environment"
+}
+
+variable "resource_list" {
+  description = "List of AWS resources and their required alarm ARNs"
+  type = object({
+    apis = list(object({
+      api = string
+    }))
+    dynamos = list(object({
+      dynamo      = string
+      read_units  = number
+      write_units = number
+    }))
+    eventbridges = list(object({
+      name     = string
+      ruleName = string
+    }))
+    queues = list(object({
+      name = string
+    }))
+    lambdas = list(object({
+      lambda  = string
+      timeout = number
+    }))
+    rdss = list(object({
+      rds           = string
+      total-iops    = number
+      total-memory  = number
+      total-storage = number
+    }))
+  })
 }
 
 variable "lambda_function_name" {
   type        = string
   description = "The lambda function name for use with CloudWatch Metrics."
+  default     = "staff-personal-change-event-processor-lambda"
 }
-
 
 variable "enable_metric_alarm" {
   type        = bool
