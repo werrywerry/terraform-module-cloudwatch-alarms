@@ -1,8 +1,3 @@
-locals {
-  sqs_list = [for queue in var.resource_list["queues"] : queue]
-}
-
-
 resource "aws_cloudwatch_metric_alarm" "sqs_approx_num_messages_visible_alarm" {
   for_each = { for idx, queue in local.sqs_list : idx => queue }
 

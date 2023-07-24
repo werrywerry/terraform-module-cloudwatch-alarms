@@ -1,7 +1,3 @@
-locals {
-  dynamo_list = [for dynamo in var.resource_list["dynamos"] : dynamo]
-}
-
 resource "aws_cloudwatch_metric_alarm" "read_capacity_alarm" {
   for_each = { for idx, dynamo in local.dynamo_list : idx => dynamo }
 

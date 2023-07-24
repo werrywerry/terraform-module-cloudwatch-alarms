@@ -1,7 +1,3 @@
-locals {
-  api_list = [for api in var.resource_list["apis"] : api]
-}
-
 resource "aws_cloudwatch_metric_alarm" "api_4xx_errors_alarm" {
   for_each = { for idx, api in local.api_list : idx => api }
 

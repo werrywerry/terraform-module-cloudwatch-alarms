@@ -1,7 +1,3 @@
-locals {
-  eventbridge_list = [for eventbridge in var.resource_list["eventbridges"] : eventbridge]
-}
-
 resource "aws_cloudwatch_metric_alarm" "eventbridge_dead_letter_alarm" {
   for_each = { for idx, eventbridge in local.eventbridge_list : idx => eventbridge }
 

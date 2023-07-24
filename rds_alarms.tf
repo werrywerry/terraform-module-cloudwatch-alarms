@@ -1,8 +1,3 @@
-
-locals {
-  rds_list = [for rds in var.resource_list["rdss"] : rds]
-}
-
 resource "aws_cloudwatch_metric_alarm" "total_iops_alarm" {
   for_each = { for idx, rds in local.rds_list : idx => rds }
 

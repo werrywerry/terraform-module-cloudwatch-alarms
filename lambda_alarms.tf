@@ -1,7 +1,3 @@
-locals {
-  lambda_list = [for lambda_obj in var.resource_list["lambdas"] : lambda_obj]
-}
-
 resource "aws_cloudwatch_metric_alarm" "success_rate" {
   for_each = { for idx, lambda_obj in local.lambda_list : idx => lambda_obj }
 
