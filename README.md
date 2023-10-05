@@ -12,7 +12,7 @@ To use this module, you need to provide a list of AWS resources that you want to
 
 
 module "cloudwatch_alarms" {
-  source = "git::https://bitbucket.det.nsw.edu.au/scm/entint/terraform-module-cloudwatch-alarms.git?ref=feature/integrate-with-dashboards"
+  source = "git::https://bitbucket.det.nsw.edu.au/scm/entint/terraform-module-cloudwatch-alarms.git"
 
   env = "dev"
 
@@ -72,7 +72,11 @@ module "cloudwatch_alarms" {
         "ruleName" : "CapabilityDemo-AwsXray"
       }
     ],
-    "queues" : []
+    "queues" : [],
+    "sns_subscriptions" : [
+      protocol        = string
+      endpoint        = string
+    ]
   }
 }
 
