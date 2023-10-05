@@ -122,7 +122,7 @@ resource "aws_cloudwatch_metric_alarm" "concurrent_executions_alarm" {
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = 1
   period              = 60
-  threshold           = 4 #Concurrent Executions
+  threshold           = each.value.concurrency * 0.8  # 80% of the concurrency value for this lambda
 
   alarm_description = "Alarm triggered if Lambda function concurrent executions exceed threshold"
   alarm_actions     = [local.sns_topic_arn]
