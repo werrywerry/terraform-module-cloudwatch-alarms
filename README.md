@@ -23,14 +23,17 @@ module "cloudwatch_alarms" {
       {
         "lambda" : "staff-personal-change-event-processor-lambda",
         "timeout" : 3000  #ms
+        "concurrency : 5"
       },
       {
         "lambda" : "staff-personal-location-change-event-processor",
         "timeout" : 3000
+        "concurrency : 10"
       },
       {
         "lambda" : "staff-service-staffpersonal-request-handler-lambda",
         "timeout" : 3000
+        "concurrency : 20"
       },
     ],
     "rdss" : [
