@@ -99,13 +99,13 @@ resource "aws_cloudwatch_log_metric_filter" "memory_used" {
   for_each = { for idx, lambda_obj in local.lambda_list : idx => lambda_obj }
 
   name           = "${each.value.lambda}-memory-used-filter"
-  pattern        = "[report_label=\"REPORT\", request_id_label=\"RequestId:\", request_id, duration_label=\"Duration:\", duration, billed_duration_label=\"Billed Duration:\", billed_duration, memory_size_label=\"Memory Size:\", memory_size, max_memory_used_label=\"Max Memory Used:\", max_memory_used, init_duration_label=\"Init Duration:\", init_duration]"
+  pattern        = "[type=REPORT, ...]"
   log_group_name = "/aws/lambda/${each.value.lambda}"
 
   metric_transformation {
     name      = "MaxMemoryUsed"
     namespace = "Custom/Lambda"
-    value     = "$14"
+    value     = "$18"
   }
 }
 
