@@ -105,7 +105,7 @@ resource "aws_cloudwatch_log_metric_filter" "memory_used" {
   metric_transformation {
     name      = "MaxMemoryUsed"
     namespace = "AWS/Lambda"
-    value     = "$14"
+    value     = "$20"
   }
 }
 
