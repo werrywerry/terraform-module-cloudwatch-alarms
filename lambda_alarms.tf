@@ -126,7 +126,7 @@ resource "aws_cloudwatch_metric_alarm" "memory_alarm" {
   }
 
   metric_name = "MaxMemoryUsed"
-  namespace   = "AWS/Lambda"
+  namespace   = "Custom/Lambda"
   statistic   = "Maximum"
 }
 
