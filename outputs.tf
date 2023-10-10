@@ -10,6 +10,9 @@ locals {
           "duration_alarm_arn" = aws_cloudwatch_metric_alarm.duration_alarm[idx].arn
         },
         {
+          "memory_alarm_arn" = aws_cloudwatch_metric_alarm.memory_alarm[idx].arn
+        },
+        {
           "throttles_alarm_arn" = aws_cloudwatch_metric_alarm.throttles_alarm[idx].arn
         },
         {

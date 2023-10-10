@@ -95,6 +95,27 @@ resource "aws_cloudwatch_metric_alarm" "duration_alarm" {
   statistic   = "Average"
 }
 
+resource "aws_cloudwatch_metric_alarm" "memory_alarm" {
+  for_each = { for idx, lambda_obj in local.lambda_list : idx => lambda_obj }
+
+  alarm_name          = "${each.value.lambda}-HighMemoryUsage"
+  comparison_operator = "GreaterThanThreshold"
+  evaluation_periods  = 1
+  period              = 60
+  threshold           = 0.9 * each.value.memory # Megabytes
+
+  alarm_description = "Alarm triggered if Lambda function memory usage exceeds threshold"
+  alarm_actions     = [local.sns_topic_arn]
+
+  dimensions = {
+    FunctionName = each.value.lambda
+  }
+
+  metric_name = "MaxMemoryUsed"
+  namespace   = "AWS/Lambda"
+  statistic   = "Maximum"
+}
+
 resource "aws_cloudwatch_metric_alarm" "throttles_alarm" {
   for_each = { for idx, lambda_obj in local.lambda_list : idx => lambda_obj }
 
