@@ -95,6 +95,20 @@ resource "aws_cloudwatch_metric_alarm" "duration_alarm" {
   statistic   = "Average"
 }
 
+resource "aws_cloudwatch_log_metric_filter" "memory_used" {
+  for_each = { for idx, lambda_obj in local.lambda_list : idx => lambda_obj }
+
+  name           = "${each.value.lambda}-memory-used-filter"
+  pattern        = "REPORT RequestId: * Duration: * Billed Duration: * Memory Size: * Max Memory Used: * MB"
+  log_group_name = "/aws/lambda/${each.value.lambda}"
+
+  metric_transformation {
+    name      = "MaxMemoryUsed"
+    namespace = "AWS/Lambda"
+    value     = "$14"
+  }
+}
+
 resource "aws_cloudwatch_metric_alarm" "memory_alarm" {
   for_each = { for idx, lambda_obj in local.lambda_list : idx => lambda_obj }
 
