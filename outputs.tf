@@ -90,7 +90,7 @@ locals {
 
   eventbridges = [
     for idx, eventbridge in local.eventbridge_list : {
-      "eventbridge" = eventbridge.eventbridge,
+      "eventbridge" = eventbridge.name,
       "alarms" = [
         {
           "eventbridge_dead_letter_alarm" = aws_cloudwatch_metric_alarm.eventbridge_dead_letter_alarm[idx].arn
@@ -101,7 +101,7 @@ locals {
 
   queues = [
     for idx, queue in local.sqs_list : {
-      "eventbridge" = eventbridge.eventbridge,
+      "queue" = queue.name,
       "alarms" = [
         {
           "sqs_approx_num_messages_visible_alarm" = aws_cloudwatch_metric_alarm.sqs_approx_num_messages_visible_alarm[idx].arn
