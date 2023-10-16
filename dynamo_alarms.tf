@@ -7,7 +7,7 @@ resource "aws_cloudwatch_metric_alarm" "read_capacity_alarm" {
   metric_name         = "ConsumedReadCapacityUnits"
   namespace           = "AWS/DynamoDB"
   period              = "60"
-  statistic           = "Sum"
+  statistic           = "Average"
   threshold           = 0.8 * each.value.read_units #Read Units
   alarm_description   = format("Read capacity threshold exceeded for DynamoDB table %s", each.value.dynamo)
   alarm_actions       = [local.sns_topic_arn]
@@ -25,8 +25,8 @@ resource "aws_cloudwatch_metric_alarm" "write_capacity_alarm" {
   metric_name         = "ConsumedWriteCapacityUnits"
   namespace           = "AWS/DynamoDB"
   period              = "60"
-  statistic           = "Sum"
-  threshold           = 0.8 * each.value.read_units #Write Units
+  statistic           = "Average"
+  threshold           = 0.8 * each.value.write_units #Write Units
   alarm_description   = format("Write capacity threshold exceeded for DynamoDB table %s", each.value.dynamo)
   alarm_actions       = [local.sns_topic_arn]
   dimensions = {
