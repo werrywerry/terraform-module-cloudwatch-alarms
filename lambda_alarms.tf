@@ -104,30 +104,43 @@ resource "aws_cloudwatch_log_metric_filter" "memory_used" {
 
   metric_transformation {
     name      = "MaxMemoryUsed"
-    namespace = "Custom/Lambda"
+    namespace = "Custom/Lambda/${each.value.lambda}"
     value     = "$18"
   }
 }
 
-resource "aws_cloudwatch_metric_alarm" "memory_alarm" {
+resource "aws_cloudwatch_metric_alarm" "memory_underutilization_alarm" {
+  for_each = { for idx, lambda_obj in local.lambda_list : idx => lambda_obj }
+
+  alarm_name          = "${each.value.lambda}-LowMemoryUsage"
+  comparison_operator = "LessThanThreshold"
+  evaluation_periods  = 1
+  period              = 300
+  threshold           = 0.2 * each.value.memory # Megabytes
+
+  alarm_description = "Alarm triggered if Lambda function memory usage is consistently low"
+  alarm_actions     = [local.sns_topic_arn]
+
+  metric_name = "MaxMemoryUsed"
+  namespace   = "Custom/Lambda/${each.value.lambda}"
+  statistic   = "Average"
+}
+
+resource "aws_cloudwatch_metric_alarm" "memory_overutilization_alarm" {
   for_each = { for idx, lambda_obj in local.lambda_list : idx => lambda_obj }
 
   alarm_name          = "${each.value.lambda}-HighMemoryUsage"
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = 1
-  period              = 60
-  threshold           = 0.9 * each.value.memory # Megabytes
+  period              = 300
+  threshold           = 0.7 * each.value.memory # Megabytes
 
-  alarm_description = "Alarm triggered if Lambda function memory usage exceeds threshold"
+  alarm_description = "Alarm triggered if Lambda function memory usage is consistenty high"
   alarm_actions     = [local.sns_topic_arn]
 
-  dimensions = {
-    FunctionName = each.value.lambda
-  }
-
   metric_name = "MaxMemoryUsed"
-  namespace   = "Custom/Lambda"
-  statistic   = "Maximum"
+  namespace   = "Custom/Lambda/${each.value.lambda}"
+  statistic   = "Average"
 }
 
 resource "aws_cloudwatch_metric_alarm" "throttles_alarm" {

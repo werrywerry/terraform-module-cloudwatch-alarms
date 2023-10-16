@@ -24,11 +24,11 @@ resource "aws_cloudwatch_metric_alarm" "sqs_approx_age_of_oldest_message_alarm" 
   alarm_name          = format("%s-sqs_approx_age_of_oldest_message_alarm", each.value.queue)
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = 1
-  metric_name         = "ApproximateAgeOfOldestMessage"
+  metric_name         = "NumberOfMessagesSent"
   namespace           = "AWS/SQS"
-  period              = 300
-  statistic           = "SampleCount"
-  threshold           = 900 #Seconds
+  period              = 60
+  statistic           = "Sum"
+  threshold           = 1
 
   alarm_description = "This alarm is triggered when the approximate age of the oldest message in the SQS queue exceeds 900 seconds"
 
