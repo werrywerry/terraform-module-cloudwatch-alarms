@@ -87,6 +87,40 @@ locals {
       ]
     }
   ]
+
+  eventbridges = [
+    for idx, eventbridge in local.eventbridge_list : {
+      "eventbridge" = eventbridge.eventbridge,
+      "alarms" = [
+        {
+          "eventbridge_dead_letter_alarm" = aws_cloudwatch_metric_alarm.eventbridge_dead_letter_alarm[idx].arn
+        }
+      ]
+    }
+  ]
+
+  queues = [
+    for idx, queue in local.sqs_list : {
+      "eventbridge" = eventbridge.eventbridge,
+      "alarms" = [
+        {
+          "sqs_approx_num_messages_visible_alarm" = aws_cloudwatch_metric_alarm.sqs_approx_num_messages_visible_alarm[idx].arn
+        },
+        {
+          "sqs_approx_age_of_oldest_message_alarm" = aws_cloudwatch_metric_alarm.eventbridge_dead_letter_alarm[idx].arn
+        }
+      ]
+    }
+  ]
+
+  lambda_dlqs = [
+    for idx, lambda in local.lambda_list : {
+      "lambda_name" = lambda.lambda,
+      "alarm" = {
+        "lambda_dlq_messages_sent_alarm" = aws_cloudwatch_metric_alarm.lambda_dlq_messages_sent_alarm[idx].arn
+      }
+    }
+  ]
 }
 
 output "env" {
@@ -99,10 +133,13 @@ output "service_name" {
 
 output "resource_list" {
   value = {
-    apis    = local.apis,
-    dynamos = local.dynamos,
-    lambdas = local.lambdas,
-    rdss    = local.rdss
+    apis         = local.apis,
+    eventbridges = local.eventbridges,
+    dynamos      = local.dynamos,
+    lambdas      = local.lambdas,
+    lambda_dlqs  = local.lambda_dlqs,
+    rdss         = local.rdss,
+    queues       = local.queues
   }
   description = "List of AWS resources and their required alarm ARNs"
 }
