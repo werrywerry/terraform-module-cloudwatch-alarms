@@ -43,7 +43,7 @@ resource "aws_cloudwatch_metric_alarm" "lambda_dlq_messages_sent_alarm" {
   for_each = { for idx, lambda_obj in local.lambda_list : idx => lambda_obj }
 
   alarm_name          = "${each.value.lambda}-DLQMessagesSentAlarm"
-  comparison_operator = "GreaterThanThreshold"
+  comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = 1
   metric_name         = "NumberOfMessagesSent"
   namespace           = "AWS/SQS"
