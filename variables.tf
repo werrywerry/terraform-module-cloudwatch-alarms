@@ -29,6 +29,8 @@ variable "resource_list" {
     lambdas = list(object({
       lambda  = string
       timeout = number
+      concurrency = number
+      memory = number
     }))
     rdss = list(object({
       rds           = string
