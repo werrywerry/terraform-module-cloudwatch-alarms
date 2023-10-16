@@ -36,6 +36,10 @@ variable "resource_list" {
       total-memory  = number
       total-storage = number
     }))
+    sns_subscriptions = list(object({
+      protocol        = string
+      endpoint        = string
+    }))
   })
 }
 

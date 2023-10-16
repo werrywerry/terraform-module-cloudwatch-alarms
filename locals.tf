@@ -5,6 +5,7 @@ locals {
   lambda_list = [for lambda_obj in var.resource_list["lambdas"] : lambda_obj]
   rds_list = [for rds in var.resource_list["rdss"] : rds]
   sqs_list = [for queue in var.resource_list["queues"] : queue]
+  sns_subscriptions = [for sub in var.resource_list["sns_subscriptions"] : sub]
 }
 
 locals {
