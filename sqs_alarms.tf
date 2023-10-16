@@ -49,7 +49,7 @@ resource "aws_cloudwatch_metric_alarm" "lambda_dlq_messages_sent_alarm" {
   namespace           = "AWS/SQS"
   period              = 60
   statistic           = "Sum"
-  threshold           = 1
+  threshold           = 0
 
   alarm_description = "Alarm triggered when messages are sent to the DLQ of ${each.value.lambda}"
   alarm_actions     = [local.sns_topic_arn]
