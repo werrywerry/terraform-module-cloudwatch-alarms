@@ -12,7 +12,7 @@ To use this module, you need to provide a list of AWS resources that you want to
 
 
 module "cloudwatch_alarms" {
-  source = "git::https://bitbucket.org/nsw-education/terraform-module-cloudwatch-alarms.git?ref=main"
+  source = "git::https://bitbucket.org/nsw-education/terraform-module-cloudwatch-alarms.git?ref=release/1.0.0"
 
   env = "Dev"
 
@@ -69,7 +69,7 @@ module "cloudwatch_alarms" {
 
 # terraform-module-cloudwatch-alarms will provide the outputs to be consumed by terraform-module-cloudwatch-dashboards
 module "service-dashboard-example" {
-  source = "git::https://bitbucket.org/nsw-education/terraform-module-cloudwatch-dashboards.git?ref=main"
+  source = "git::https://bitbucket.org/nsw-education/terraform-module-cloudwatch-dashboards.git?ref=release/1.0.0"
 
   env = module.cloudwatch_alarms.env
 
