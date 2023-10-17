@@ -2,7 +2,7 @@
 
 This module sets up all necessary CloudWatch Alarms for the AWS resources provided. It will also create an SNS topic and set it as the target for alarm actions.
 
-In addition, it integrates withÂ terraform-module-cloudwatch-dashboardsÂ to create and manage corresponding CloudWatch monitoring dashboards. Alarms are then mapped to their relevant dashboard widgets.
+In addition, it integrates withÊterraform-module-cloudwatch-dashboardsÊto create and manage corresponding CloudWatch monitoring dashboards. Alarms are then mapped to their relevant dashboard widgets.
 ## Usage
 
 To use this module, you need to provide a list of AWS resources that you want to monitor. Here's an example:
@@ -12,31 +12,19 @@ To use this module, you need to provide a list of AWS resources that you want to
 
 
 module "cloudwatch_alarms" {
-  source = "git::https://bitbucket.det.nsw.edu.au/scm/entint/terraform-module-cloudwatch-alarms.git"
+  source = "git::https://bitbucket.org/nsw-education/terraform-module-cloudwatch-alarms.git?ref=main"
 
-  env = "dev"
+  env = "Dev"
 
-  service_name   = "TerraformDashboardAlarmDemo"
+  service_name   = "Terraform-DashboardAlarm-Demo"
   
   resource_list = {
     "lambdas" : [
       {
-        "lambda" : "staff-personal-change-event-processor-lambda",
-        "timeout" : 5000,  #ms
-        "concurrency" : 1,
+        "lambda" : "SharedComponents-StructuredLogging-Demo",
+        "timeout" : 5000, #ms
+        "concurrency" : 2,
         "memory" : 128
-      },
-      {
-        "lambda" : "staff-personal-location-change-event-processor",
-        "timeout" : 3000,
-        "concurrency" : 10,
-        "memory" : 192
-      },
-      {
-        "lambda" : "staff-service-staffpersonal-request-handler-lambda",
-        "timeout" : 3000,
-        "concurrency" : 20,
-        "memory" : 192
       },
     ],
     "rdss" : [
@@ -47,16 +35,9 @@ module "cloudwatch_alarms" {
         "total-memory": 5.34 * 1024 *1024 * 1024, # 5.34 GB
         "total-storage": 418 * 1024 * 1024 * 1024 # 418 GB 
       },
-      {
-        "rds" : "room-service-datastore" ,
-        "total-iops": 1000,
-        "total-memory": 5.34 * 1024 *1024 * 1024, # 5.34 GB in Bytes
-        "total-storage": 418 * 1024 * 1024 * 1024 # 418 GB in Bytes
-      }
     ],
     "apis" : [
       { "api" : "staff-service-v3" },
-      { "api" : "room-service-v1" }
     ],
     "dynamos" : [
       # If read/write capacity is set to on-demand, set the read/write units to 100 and adjust as necessary
@@ -65,11 +46,6 @@ module "cloudwatch_alarms" {
         "read_units" : 100,
         "write_units" : 100
       },
-      {
-        "dynamo" : "CapabilityDemo-AwsXray",
-        "read_units" : 100,
-        "write_units" : 100
-      }
     ],
     "eventbridges" : [
       # Provide the event bus name and rule name for each event bus rule. 
@@ -78,23 +54,28 @@ module "cloudwatch_alarms" {
         "ruleName" : "CapabilityDemo-AwsXray"
       }
     ],
-    "queues" : [],
+    "queues" : [
+      { "name" : "test-event-bus-dlq" }
+    ],
+    # Subscriptions such as email addresses will need to be verified after deployment
     "sns_subscriptions" : [
-      protocol        = string
-      endpoint        = string
+      {
+        "protocol" : "email",
+        "endpoint" : "joel.bradley3@det.nsw.edu.au"
+      }
     ]
   }
 }
 
 # terraform-module-cloudwatch-alarms will provide the outputs to be consumed by terraform-module-cloudwatch-dashboards
 module "service-dashboard-example" {
-  source = "git::https://bitbucket.det.nsw.edu.au/scm/entint/terraform-module-cloudwatch-dashboards.git?ref=feature/initial"
+  source = "git::https://bitbucket.org/nsw-education/terraform-module-cloudwatch-dashboards.git?ref=main"
 
   env = module.cloudwatch_alarms.env
 
   service_name   = module.cloudwatch_alarms.service_name
   
-  resource_list  = module.cloudwatch_alarms.resource_listI}
-
+  resource_list  = module.cloudwatch_alarms.resource_list
+}
 
 ```
