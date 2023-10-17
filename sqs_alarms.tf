@@ -14,7 +14,7 @@ resource "aws_cloudwatch_metric_alarm" "sqs_approx_num_messages_visible_alarm" {
   alarm_actions = [local.sns_topic_arn]
 
   dimensions = {
-    QueueName = each.value.queue
+    QueueName = each.value.name
   }
 }
 
@@ -35,7 +35,7 @@ resource "aws_cloudwatch_metric_alarm" "sqs_approx_age_of_oldest_message_alarm" 
   alarm_actions = [local.sns_topic_arn]
 
   dimensions = {
-    QueueName = each.value.queue
+    QueueName = each.value.name
   }
 }
 
