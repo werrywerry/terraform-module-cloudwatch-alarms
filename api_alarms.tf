@@ -1,27 +1,3 @@
-variable "api_4xx_threshold" {
-  description = "Threshold for API 4XX errors"
-  type        = number
-  default     = 1
-}
-
-variable "api_5xx_threshold" {
-  description = "Threshold for API 5XX errors"
-  type        = number
-  default     = 1
-}
-
-variable "api_latency_threshold" {
-  description = "Threshold for API latency in milliseconds"
-  type        = number
-  default     = 1000
-}
-
-variable "api_integration_latency_threshold" {
-  description = "Threshold for API integration latency in milliseconds"
-  type        = number
-  default     = 2000
-}
-
 resource "aws_cloudwatch_metric_alarm" "api_4xx_errors_alarm" {
   for_each = { for idx, api in local.merged_apis : idx => api }
 

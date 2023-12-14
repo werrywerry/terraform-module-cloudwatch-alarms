@@ -25,5 +25,17 @@ locals {
 }
 
 locals {
+  merged_dynamodb = [for dynamo in var.resource_list.dynamos : {
+    dynamo          = dynamo.dynamo
+    read_units      = dynamo.read_units
+    write_units     = dynamo.write_units
+    read_threshold  = lookup(var.dynamo_thresholds, dynamo.dynamo, 
+                      { "read_capacity_threshold" = 0.8 * dynamo.read_units }).read_capacity_threshold
+    write_threshold = lookup(var.dynamo_thresholds, dynamo.dynamo, 
+                      { "write_capacity_threshold" = 0.8 * dynamo.write_units }).write_capacity_threshold
+  }]
+}
+
+locals {
   sns_topic_arn = aws_sns_topic.alarms_topic.arn
 }

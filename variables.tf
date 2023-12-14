@@ -56,6 +56,15 @@ variable "api_thresholds" {
   default = {}
 }
 
+variable "dynamo_thresholds" {
+  description = "Thresholds for Dynamo DBs"
+  type = map(object({
+    read_capacity_threshold  = number
+    write_capacity_threshold = number
+  }))
+  default = {}
+}
+
 variable "lambda_function_name" {
   type        = string
   description = "The lambda function name for use with CloudWatch Metrics."
