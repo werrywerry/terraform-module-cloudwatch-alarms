@@ -47,6 +47,9 @@ variable "resource_list" {
       endpoint        = string
     }))
   })
+  default = {
+    apis = []
+  }
 }
 
 variable "lambda_function_name" {
