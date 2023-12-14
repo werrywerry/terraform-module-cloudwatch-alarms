@@ -17,10 +17,10 @@ locals {
   }
   merged_apis = [for api in var.resource_list.apis : merge(local.default_api_thresholds, { 
     api                            = api.api,
-    error_4xx_threshold            = api.error_4xx_threshold != null ? api.error_4xx_threshold : local.default_api_thresholds.error_4xx_threshold,
-    error_5xx_threshold            = api.error_5xx_threshold != null ? api.error_5xx_threshold : local.default_api_thresholds.error_5xx_threshold,
-    latency_threshold              = api.latency_threshold != null ? api.latency_threshold : local.default_api_thresholds.latency_threshold,
-    integration_latency_threshold  = api.integration_latency_threshold != null ? api.integration_latency_threshold : local.default_api_thresholds.integration_latency_threshold
+    error_4xx_threshold            = coalesce(api.error_4xx_threshold, local.default_api_thresholds.error_4xx_threshold),
+    error_5xx_threshold            = coalesce(api.error_5xx_threshold, local.default_api_thresholds.error_5xx_threshold),
+    latency_threshold              = coalesce(api.latency_threshold, local.default_api_thresholds.latency_threshold),
+    integration_latency_threshold  = coalesce(api.integration_latency_threshold, local.default_api_thresholds.integration_latency_threshold)
   })]
 }
 
