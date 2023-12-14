@@ -65,6 +65,20 @@ variable "dynamo_thresholds" {
   default = {}
 }
 
+variable "lambda_thresholds" {
+  description = "Thresholds for Lambdas"
+  type = map(object({
+    success_rate_threshold            = number
+    errors_threshold                  = number
+    duration_threshold                = number
+    memory_underutilization_threshold = number
+    memory_overutilization_threshold  = number
+    concurrent_executions_threshold   = number
+    throttles_threshold               = number
+  }))
+  default = {}
+}
+
 variable "lambda_function_name" {
   type        = string
   description = "The lambda function name for use with CloudWatch Metrics."

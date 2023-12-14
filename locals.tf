@@ -34,8 +34,34 @@ locals {
     dynamo          = dynamo.dynamo
     read_units      = dynamo.read_units
     write_units     = dynamo.write_units
-    read_threshold  = lookup(var.dynamo_thresholds, dynamo.dynamo, local.default_dynamo_thresholds[dynamo.dynamo]).read_capacity_threshold
-    write_threshold = lookup(var.dynamo_thresholds, dynamo.dynamo, local.default_dynamo_thresholds[dynamo.dynamo]).write_capacity_threshold
+    read_capacity_threshold  = lookup(var.dynamo_thresholds, dynamo.dynamo, local.default_dynamo_thresholds[dynamo.dynamo]).read_capacity_threshold
+    write_capacity_threshold = lookup(var.dynamo_thresholds, dynamo.dynamo, local.default_dynamo_thresholds[dynamo.dynamo]).write_capacity_threshold
+  }]
+}
+
+locals {
+  default_lambda_thresholds = { for lambda in var.resource_list.lambdas : lambda.lambda => {
+    success_rate_threshold            = 99,   # in %
+    errors_threshold                  = 1,
+    duration_threshold                = 0.9 * lambda.timeout,
+    memory_underutilization_threshold = 0.3 * lambda.memory,
+    memory_overutilization_threshold  = 0.8 * lambda.memory,
+    concurrent_executions_threshold   = 0.8 * lambda.concurrency,
+    throttles_threshold               = 3
+  }}
+
+  merged_lambdas = [for lambda in var.resource_list.lambdas : {
+    lambda          = lambda.lambda
+    concurrency     = lambda.concurrency
+    memory          = lambda.memory
+    timeout         = lambda.timeout
+    success_rate_threshold      = lookup(var.lambda_thresholds, lambda.lambda, local.default_lambda_thresholds[lambda.lambda]).success_rate_threshold
+    errors_threshold     = lookup(var.lambda_thresholds, lambda.lambda, local.default_lambda_thresholds[lambda.lambda]).errors_threshold
+    duration_threshold     = lookup(var.lambda_thresholds, lambda.lambda, local.default_lambda_thresholds[lambda.lambda]).duration_threshold
+    memory_underutilization_threshold  = lookup(var.lambda_thresholds, lambda.lambda, local.default_lambda_thresholds[lambda.lambda]).memory_underutilization_threshold
+    memory_overutilization_threshold = lookup(var.lambda_thresholds, lambda.lambda, local.default_lambda_thresholds[lambda.lambda]).memory_overutilization_threshold
+    concurrent_executions_threshold     = lookup(var.lambda_thresholds, lambda.lambda, local.default_lambda_thresholds[lambda.lambda]).concurrent_executions_threshold
+    throttles_threshold     = lookup(var.lambda_thresholds, lambda.lambda, local.default_lambda_thresholds[lambda.lambda]).throttles_threshold
   }]
 }
 
