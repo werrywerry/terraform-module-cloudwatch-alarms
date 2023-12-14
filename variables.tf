@@ -47,22 +47,24 @@ variable "resource_list" {
       endpoint = string
     }))
   })
+}
+
+variable "default_api_thresholds" {
+  description = "Default thresholds for APIs"
+  type = object({
+    error_4xx_threshold            = number
+    error_5xx_threshold            = number
+    latency_threshold              = number
+    integration_latency_threshold  = number
+  })
   default = {
-    apis = [{
-      api                           = null
-      error_4xx_threshold           = null
-      error_5xx_threshold           = null
-      latency_threshold             = null
-      integration_latency_threshold = null
-    }],
-    dynamos           = [],
-    eventbridges      = [],
-    queues            = [],
-    lambdas           = [],
-    rdss              = [],
-    sns_subscriptions = [],
+    error_4xx_threshold            = 5
+    error_5xx_threshold            = 2
+    latency_threshold              = 1500
+    integration_latency_threshold  = 2500
   }
 }
+
 
 variable "lambda_function_name" {
   type        = string

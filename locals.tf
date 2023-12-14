@@ -9,21 +9,8 @@ locals {
 }
 
 locals {
-  default_api_thresholds = {
-    error_4xx_threshold            = 5
-    error_5xx_threshold            = 2
-    latency_threshold              = 1500
-    integration_latency_threshold  = 2500
-  }
-  merged_apis = [for api in var.resource_list.apis : merge(local.default_api_thresholds, { 
-    api                            = api.api,
-    error_4xx_threshold            = coalesce(api.error_4xx_threshold, local.default_api_thresholds.error_4xx_threshold),
-    error_5xx_threshold            = coalesce(api.error_5xx_threshold, local.default_api_thresholds.error_5xx_threshold),
-    latency_threshold              = coalesce(api.latency_threshold, local.default_api_thresholds.latency_threshold),
-    integration_latency_threshold  = coalesce(api.integration_latency_threshold, local.default_api_thresholds.integration_latency_threshold)
-  })]
+  merged_apis = [for api in var.resource_list.apis : merge(var.default_api_thresholds, api)]
 }
-
 
 locals {
   sns_topic_arn = aws_sns_topic.alarms_topic.arn
