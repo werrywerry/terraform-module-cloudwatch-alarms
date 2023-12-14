@@ -12,11 +12,11 @@ variable "resource_list" {
   description = "List of AWS resources and their required alarm ARNs"
   type = object({
     apis = list(object({
-      api                            = string
-      error_4xx_threshold            = number
-      error_5xx_threshold            = number
-      latency_threshold              = number
-      integration_latency_threshold  = number
+      api                           = string
+      error_4xx_threshold           = number
+      error_5xx_threshold           = number
+      latency_threshold             = number
+      integration_latency_threshold = number
     }))
     dynamos = list(object({
       dynamo      = string
@@ -31,10 +31,10 @@ variable "resource_list" {
       name = string
     }))
     lambdas = list(object({
-      lambda  = string
-      timeout = number
+      lambda      = string
+      timeout     = number
       concurrency = number
-      memory = number
+      memory      = number
     }))
     rdss = list(object({
       rds           = string
@@ -43,17 +43,17 @@ variable "resource_list" {
       total-storage = number
     }))
     sns_subscriptions = list(object({
-      protocol        = string
-      endpoint        = string
+      protocol = string
+      endpoint = string
     }))
   })
   default = {
-    apis = [],
-    dynamos = [],
-    eventbridges = [],
-    queues = [],
-    lambdas = [],
-    rdss = [],
+    apis              = [],
+    dynamos           = [],
+    eventbridges      = [],
+    queues            = [],
+    lambdas           = [],
+    rdss              = [],
     sns_subscriptions = [],
   }
 }
