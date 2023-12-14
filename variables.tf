@@ -12,7 +12,11 @@ variable "resource_list" {
   description = "List of AWS resources and their required alarm ARNs"
   type = object({
     apis = list(object({
-      api = string
+      api                            = string
+      error_4xx_threshold            = number
+      error_5xx_threshold            = number
+      latency_threshold              = number
+      integration_latency_threshold  = number
     }))
     dynamos = list(object({
       dynamo      = string

@@ -9,5 +9,15 @@ locals {
 }
 
 locals {
+  default_thresholds = {
+    error_4xx_threshold            = 5
+    error_5xx_threshold            = 2
+    latency_threshold              = 1500
+    integration_latency_threshold  = 2500
+  }
+  merged_apis = [for api in var.resource_list.apis : merge(local.default_thresholds, api)]
+}
+
+locals {
   sns_topic_arn = aws_sns_topic.alarms_topic.arn
 }
