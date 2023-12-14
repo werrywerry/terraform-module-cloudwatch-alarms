@@ -48,7 +48,13 @@ variable "resource_list" {
     }))
   })
   default = {
-    apis = []
+    apis = [],
+    dynamos = [],
+    eventbridges = [],
+    queues = [],
+    lambdas = [],
+    rdss = [],
+    sns_subscriptions = [],
   }
 }
 
