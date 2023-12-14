@@ -13,10 +13,10 @@ variable "resource_list" {
   type = object({
     apis = list(object({
       api                           = string
-      error_4xx_threshold           = number
-      error_5xx_threshold           = number
-      latency_threshold             = number
-      integration_latency_threshold = number
+      error_4xx_threshold           = any
+      error_5xx_threshold           = any
+      latency_threshold             = any
+      integration_latency_threshold = any
     }))
     dynamos = list(object({
       dynamo      = string
