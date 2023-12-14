@@ -9,7 +9,19 @@ locals {
 }
 
 locals {
-  merged_apis = [for api in var.resource_list.apis : merge(var.default_api_thresholds, api)]
+  default_api_thresholds = {
+    error_4xx_threshold            = 5
+    error_5xx_threshold            = 2
+    latency_threshold              = 1500
+    integration_latency_threshold  = 2500
+  }
+  merged_apis = [for api in var.resource_list.apis : merge(
+    {
+      api = api.api
+    }, 
+    local.default_api_thresholds,
+    contains(keys(var.api_thresholds), api.api) ? var.api_thresholds[api.api] : {}
+  )]
 }
 
 locals {

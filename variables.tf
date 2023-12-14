@@ -12,11 +12,7 @@ variable "resource_list" {
   description = "List of AWS resources and their required alarm ARNs"
   type = object({
     apis = list(object({
-      api                           = string
-      error_4xx_threshold           = number
-      error_5xx_threshold           = number
-      latency_threshold             = number
-      integration_latency_threshold = number
+      api = string
     }))
     dynamos = list(object({
       dynamo      = string
@@ -49,22 +45,16 @@ variable "resource_list" {
   })
 }
 
-variable "default_api_thresholds" {
-  description = "Default thresholds for APIs"
-  type = object({
-    error_4xx_threshold            = number
-    error_5xx_threshold            = number
-    latency_threshold              = number
-    integration_latency_threshold  = number
-  })
-  default = {
-    error_4xx_threshold            = 5
-    error_5xx_threshold            = 2
-    latency_threshold              = 1500
-    integration_latency_threshold  = 2500
-  }
+variable "api_thresholds" {
+  description = "Thresholds for APIs"
+  type = map(object({
+    error_4xx_threshold           = number
+    error_5xx_threshold           = number
+    latency_threshold             = number
+    integration_latency_threshold = number
+  }))
+  default = {}
 }
-
 
 variable "lambda_function_name" {
   type        = string
