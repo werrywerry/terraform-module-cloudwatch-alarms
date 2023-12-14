@@ -48,7 +48,13 @@ variable "resource_list" {
     }))
   })
   default = {
-    apis              = [],
+    apis = [{
+      api                           = null
+      error_4xx_threshold           = null
+      error_5xx_threshold           = null
+      latency_threshold             = null
+      integration_latency_threshold = null
+    }],
     dynamos           = [],
     eventbridges      = [],
     queues            = [],
