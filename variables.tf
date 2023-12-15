@@ -65,6 +65,14 @@ variable "dynamo_thresholds" {
   default = {}
 }
 
+variable "eventbridge_thresholds" {
+  description = "Thresholds for EventBridge rules"
+  type = map(object({
+    eventbridge_dead_letter_threshold  = number
+  }))
+  default = {}
+}
+
 variable "lambda_thresholds" {
   description = "Thresholds for Lambdas"
   type = map(object({
@@ -75,6 +83,28 @@ variable "lambda_thresholds" {
     memory_overutilization_threshold  = number
     concurrent_executions_threshold   = number
     throttles_threshold               = number
+  }))
+  default = {}
+}
+
+variable "rds_thresholds" {
+  description = "Thresholds for RDS instances"
+  type = map(object({
+    total_iops_threshold  = number
+    cpu_utilization_threshold = number
+    read_latency_threshold  = number
+    write_latency_threshold = number
+    freeable_memory_threshold  = number
+    free_storage_space_threshold = number
+  }))
+  default = {}
+}
+
+variable "sqs_thresholds" {
+  description = "Thresholds for SQS queues"
+  type = map(object({
+    sqs_approx_num_messages_visible_threshold  = number
+    sqs_approx_age_of_oldest_message_threshold = number
   }))
   default = {}
 }
