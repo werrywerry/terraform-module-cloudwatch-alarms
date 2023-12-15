@@ -27,12 +27,11 @@ module "cloudwatch_alarms" {
       },
     ],
     "rdss" : [
-      # If IOPS are set to on-demand, select a total IOPS of 100 and adjust as required
       {
         "rds" : "staff-service-datastore",
-        "total-iops": 100,
-        "total-memory": 5.34 * 1024 *1024 * 1024, # 5.34 GB
-        "total-storage": 418 * 1024 * 1024 * 1024 # 418 GB 
+        "total-iops": 3000,
+        "total-memory": 8 * 1024 *1024 * 1024, # 8 GB
+        "total-storage": 400 * 1024 * 1024 * 1024 # 400 GB 
       },
     ],
     "apis" : [
