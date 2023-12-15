@@ -68,7 +68,7 @@ variable "dynamo_thresholds" {
 variable "eventbridge_thresholds" {
   description = "Thresholds for EventBridge rules"
   type = map(object({
-    eventbridge_dead_letter_threshold  = number
+    eventbridge_dead_letter_threshold = number
   }))
   default = {}
 }
@@ -90,11 +90,11 @@ variable "lambda_thresholds" {
 variable "rds_thresholds" {
   description = "Thresholds for RDS instances"
   type = map(object({
-    total_iops_threshold  = number
-    cpu_utilization_threshold = number
-    read_latency_threshold  = number
-    write_latency_threshold = number
-    freeable_memory_threshold  = number
+    total_iops_threshold         = number
+    cpu_utilization_threshold    = number
+    read_latency_threshold       = number
+    write_latency_threshold      = number
+    freeable_memory_threshold    = number
     free_storage_space_threshold = number
   }))
   default = {}

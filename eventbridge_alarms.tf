@@ -1,7 +1,7 @@
 resource "aws_cloudwatch_metric_alarm" "eventbridge_dead_letter_alarm" {
   for_each = { for idx, eventbridge in local.merged_eventbridges : idx => eventbridge }
 
-  alarm_name = "${each.value.name}-${each.value.ruleName}-DeadLetterInvocations"
+  alarm_name          = "${each.value.name}-${each.value.ruleName}-DeadLetterInvocations"
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = 1
   metric_name         = "DeadLetterInvocations"

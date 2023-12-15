@@ -85,7 +85,7 @@ resource "aws_cloudwatch_metric_alarm" "write_latency_alarm" {
 
   alarm_name          = format("%s-WriteLatency", each.value.rds)
   comparison_operator = "GreaterThanOrEqualToThreshold"
-  evaluation_periods  = "1" 
+  evaluation_periods  = "1"
   metric_name         = "WriteLatency"
   namespace           = "AWS/RDS"
   period              = "60"

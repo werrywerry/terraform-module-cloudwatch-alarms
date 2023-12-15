@@ -134,9 +134,9 @@ output "resource_list" {
   description = "List of AWS resources and their required alarm ARNs"
 }
 
-  output "sns_topic_arn" {
-    value = {
-      sns_arn = local.sns_topic_arn
-    }
+output "sns_topic_arn" {
+  value = {
+    sns_arn = local.sns_topic_arn
+  }
   description = "ARN of SNS topic to which alrms will be sent"
 }
