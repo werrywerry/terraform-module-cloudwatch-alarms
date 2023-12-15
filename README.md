@@ -81,7 +81,7 @@ module "service-dashboard-example" {
 ```
 
 **Providing overrides for the alarm threshold defaults**
-If no threshold overrides ar provided, the module will assign default thresholds to the alarm based on the input variables.
+If no threshold overrides are provided, the module will assign default thresholds to the alarm based on the input variables.
 Default alarm threshold values can be found at https://nsw-education.atlassian.net/wiki/spaces/CIA/pages/114859553/Default+Alarm+Thresholds
 
 ```hcl
