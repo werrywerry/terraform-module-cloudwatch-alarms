@@ -112,15 +112,6 @@ locals {
       ]
     }
   ]
-
-  lambda_dlqs = [
-    for idx, lambda in local.lambda_list : {
-      "lambda_name" = lambda.lambda,
-      "alarm" = {
-        "lambda_dlq_messages_sent_alarm" = aws_cloudwatch_metric_alarm.lambda_dlq_messages_sent_alarm[idx].arn
-      }
-    }
-  ]
 }
 
 output "env" {
@@ -137,16 +128,15 @@ output "resource_list" {
     eventbridges = local.eventbridges,
     dynamos      = local.dynamos,
     lambdas      = local.lambdas,
-    lambda_dlqs  = local.lambda_dlqs,
     rdss         = local.rdss,
     queues       = local.queues
   }
   description = "List of AWS resources and their required alarm ARNs"
 }
 
-  output "sns_topic_arn" {
-    value = {
-      sns_arn = local.sns_topic_arn
-    }
+output "sns_topic_arn" {
+  value = {
+    sns_arn = local.sns_topic_arn
+  }
   description = "ARN of SNS topic to which alrms will be sent"
 }

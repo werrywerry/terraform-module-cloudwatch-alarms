@@ -27,10 +27,10 @@ variable "resource_list" {
       name = string
     }))
     lambdas = list(object({
-      lambda  = string
-      timeout = number
+      lambda      = string
+      timeout     = number
       concurrency = number
-      memory = number
+      memory      = number
     }))
     rdss = list(object({
       rds           = string
@@ -39,10 +39,74 @@ variable "resource_list" {
       total-storage = number
     }))
     sns_subscriptions = list(object({
-      protocol        = string
-      endpoint        = string
+      protocol = string
+      endpoint = string
     }))
   })
+}
+
+variable "api_thresholds" {
+  description = "Thresholds for APIs"
+  type = map(object({
+    error_4xx_threshold           = number
+    error_5xx_threshold           = number
+    latency_threshold             = number
+    integration_latency_threshold = number
+  }))
+  default = {}
+}
+
+variable "dynamo_thresholds" {
+  description = "Thresholds for Dynamo DBs"
+  type = map(object({
+    read_capacity_threshold  = number
+    write_capacity_threshold = number
+  }))
+  default = {}
+}
+
+variable "eventbridge_thresholds" {
+  description = "Thresholds for EventBridge rules"
+  type = map(object({
+    eventbridge_dead_letter_threshold = number
+  }))
+  default = {}
+}
+
+variable "lambda_thresholds" {
+  description = "Thresholds for Lambdas"
+  type = map(object({
+    success_rate_threshold            = number
+    errors_threshold                  = number
+    duration_threshold                = number
+    memory_underutilization_threshold = number
+    memory_overutilization_threshold  = number
+    concurrent_executions_threshold   = number
+    throttles_threshold               = number
+  }))
+  default = {}
+}
+
+variable "rds_thresholds" {
+  description = "Thresholds for RDS instances"
+  type = map(object({
+    total_iops_threshold         = number
+    cpu_utilization_threshold    = number
+    read_latency_threshold       = number
+    write_latency_threshold      = number
+    freeable_memory_threshold    = number
+    free_storage_space_threshold = number
+  }))
+  default = {}
+}
+
+variable "sqs_thresholds" {
+  description = "Thresholds for SQS queues"
+  type = map(object({
+    sqs_approx_num_messages_visible_threshold  = number
+    sqs_approx_age_of_oldest_message_threshold = number
+  }))
+  default = {}
 }
 
 variable "lambda_function_name" {

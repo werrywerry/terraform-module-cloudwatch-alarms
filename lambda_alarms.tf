@@ -1,5 +1,5 @@
 resource "aws_cloudwatch_metric_alarm" "success_rate" {
-  for_each = { for idx, lambda_obj in local.lambda_list : idx => lambda_obj }
+  for_each = { for idx, lambda_obj in local.merged_lambdas : idx => lambda_obj }
 
   alarm_name        = format("%s-success-rate", each.value.lambda)
   alarm_description = format("Success rate for %s", each.value.lambda)
@@ -7,7 +7,7 @@ resource "aws_cloudwatch_metric_alarm" "success_rate" {
   alarm_actions = [local.sns_topic_arn]
 
   comparison_operator = "LessThanThreshold"
-  threshold           = var.threshold #% of executions that were successfull
+  threshold           = each.value.success_rate_threshold
   evaluation_periods  = var.evaluation_periods
   treat_missing_data  = "notBreaching"
 
@@ -55,13 +55,13 @@ resource "aws_cloudwatch_metric_alarm" "success_rate" {
 
 
 resource "aws_cloudwatch_metric_alarm" "errors_alarm" {
-  for_each = { for idx, lambda_obj in local.lambda_list : idx => lambda_obj }
+  for_each = { for idx, lambda_obj in local.merged_lambdas : idx => lambda_obj }
 
   alarm_name          = "${each.value.lambda}-Errors"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = 1
   period              = 60
-  threshold           = 1 #Errors
+  threshold           = each.value.errors_threshold
   alarm_description   = "Alarm triggered if Lambda function errors exceed threshold"
   alarm_actions       = [local.sns_topic_arn]
 
@@ -75,13 +75,13 @@ resource "aws_cloudwatch_metric_alarm" "errors_alarm" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "duration_alarm" {
-  for_each = { for idx, lambda_obj in local.lambda_list : idx => lambda_obj }
+  for_each = { for idx, lambda_obj in local.merged_lambdas : idx => lambda_obj }
 
   alarm_name          = "${each.value.lambda}-Duration"
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = 1
   period              = 60
-  threshold           = 0.75 * each.value.timeout #Milliseconds
+  threshold           = each.value.duration_threshold
 
   alarm_description = "Alarm triggered if Lambda function duration exceeds threshold"
   alarm_actions     = [local.sns_topic_arn]
@@ -96,7 +96,7 @@ resource "aws_cloudwatch_metric_alarm" "duration_alarm" {
 }
 
 resource "aws_cloudwatch_log_metric_filter" "memory_used" {
-  for_each = { for idx, lambda_obj in local.lambda_list : idx => lambda_obj }
+  for_each = { for idx, lambda_obj in local.merged_lambdas : idx => lambda_obj }
 
   name           = "${each.value.lambda}-memory-used-filter"
   pattern        = "[type=REPORT, ...]"
@@ -110,13 +110,13 @@ resource "aws_cloudwatch_log_metric_filter" "memory_used" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "memory_underutilization_alarm" {
-  for_each = { for idx, lambda_obj in local.lambda_list : idx => lambda_obj }
+  for_each = { for idx, lambda_obj in local.merged_lambdas : idx => lambda_obj }
 
   alarm_name          = "${each.value.lambda}-LowMemoryUsage"
   comparison_operator = "LessThanThreshold"
   evaluation_periods  = 1
   period              = 300
-  threshold           = 0.2 * each.value.memory # Megabytes
+  threshold           = each.value.memory_underutilization_threshold
 
   alarm_description = "Alarm triggered if Lambda function memory usage is consistently low"
   alarm_actions     = [local.sns_topic_arn]
@@ -127,13 +127,13 @@ resource "aws_cloudwatch_metric_alarm" "memory_underutilization_alarm" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "memory_overutilization_alarm" {
-  for_each = { for idx, lambda_obj in local.lambda_list : idx => lambda_obj }
+  for_each = { for idx, lambda_obj in local.merged_lambdas : idx => lambda_obj }
 
   alarm_name          = "${each.value.lambda}-HighMemoryUsage"
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = 1
   period              = 300
-  threshold           = 0.7 * each.value.memory # Megabytes
+  threshold           = each.value.memory_overutilization_threshold
 
   alarm_description = "Alarm triggered if Lambda function memory usage is consistenty high"
   alarm_actions     = [local.sns_topic_arn]
@@ -144,13 +144,13 @@ resource "aws_cloudwatch_metric_alarm" "memory_overutilization_alarm" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "throttles_alarm" {
-  for_each = { for idx, lambda_obj in local.lambda_list : idx => lambda_obj }
+  for_each = { for idx, lambda_obj in local.merged_lambdas : idx => lambda_obj }
 
   alarm_name          = "${each.value.lambda}-Throttles"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = 1
   period              = 60
-  threshold           = 1 #Throttles
+  threshold           = each.value.throttles_threshold
 
   alarm_description = "Alarm triggered if Lambda function throttles exceed threshold"
   alarm_actions     = [local.sns_topic_arn]
@@ -165,12 +165,12 @@ resource "aws_cloudwatch_metric_alarm" "throttles_alarm" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "concurrent_executions_alarm" {
-  for_each            = { for idx, lambda_obj in local.lambda_list : idx => lambda_obj }
+  for_each            = { for idx, lambda_obj in local.merged_lambdas : idx => lambda_obj }
   alarm_name          = "${each.value.lambda}-ConcurrentExecutions"
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = 1
   period              = 60
-  threshold           = each.value.concurrency * 0.8  # 80% of the concurrency value for this lambda
+  threshold           = each.value.concurrent_executions_threshold
 
   alarm_description = "Alarm triggered if Lambda function concurrent executions exceed threshold"
   alarm_actions     = [local.sns_topic_arn]
