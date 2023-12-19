@@ -7,7 +7,7 @@ resource "aws_cloudwatch_metric_alarm" "api_4xx_errors_alarm" {
   metric_name         = "4XXError"
   namespace           = "AWS/ApiGateway"
   period              = "300"
-  statistic           = "SampleCount"
+  statistic           = "Sum"
   threshold           = each.value.error_4xx_threshold
   alarm_description   = "This metric checks for 4xx errors in the ${each.value.api} API"
   alarm_actions       = [local.sns_topic_arn]
@@ -25,7 +25,7 @@ resource "aws_cloudwatch_metric_alarm" "api_5xx_errors_alarm" {
   metric_name         = "5XXError"
   namespace           = "AWS/ApiGateway"
   period              = "300"
-  statistic           = "SampleCount"
+  statistic           = "Sum"
   threshold           = each.value.error_5xx_threshold
   alarm_description   = "This metric checks for 5xx errors in the ${each.value.api} API"
   alarm_actions       = [local.sns_topic_arn]
