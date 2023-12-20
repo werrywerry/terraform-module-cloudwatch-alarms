@@ -7,7 +7,7 @@ resource "aws_cloudwatch_metric_alarm" "eventbridge_dead_letter_alarm" {
   metric_name         = "DeadLetterInvocations"
   namespace           = "AWS/Events"
   period              = 300
-  statistic           = "SampleCount"
+  statistic           = "Sum"
   threshold           = each.value.eventbridge_dead_letter_threshold
 
   alarm_description = format("This alarm is triggered when there is at least 1 DeadLetterInvocation in EventBridge %s", each.value.name)

@@ -21,7 +21,7 @@ resource "aws_cloudwatch_metric_alarm" "total_iops_alarm" {
       metric_name = "ReadIOPS"
       namespace   = "AWS/RDS"
       period      = "60"
-      stat        = "SampleCount"
+      stat        = "Sum"
       unit        = "Count"
       dimensions = {
         DBInstanceIdentifier = each.value.rds
@@ -35,7 +35,7 @@ resource "aws_cloudwatch_metric_alarm" "total_iops_alarm" {
       metric_name = "WriteIOPS"
       namespace   = "AWS/RDS"
       period      = "60"
-      stat        = "SampleCount"
+      stat        = "Sum"
       unit        = "Count"
       dimensions = {
         DBInstanceIdentifier = each.value.rds
